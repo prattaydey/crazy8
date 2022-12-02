@@ -2,5 +2,5 @@
 ## Roster and Roles:
 Prattay Dey:  Project Manager  
 Kevin Li:  Devo  
-Joesph Wu:  Devo  
-Matthew Yee:  Devo  
+Joseph Wu:  Devo  
+Anjini Katari:  Devo
