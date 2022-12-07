@@ -21,6 +21,13 @@ pd 7
 
 fristL -- TIMESTAMP
 --------------------------------------------------------------
+prattayD -- 2022-12-06 20:30
+Revised DD:
+- Final decision of Crazy 8 as the game we will build, as all of our team is familiar with the rules. Adjusted our webmap and DD accordingly. 
+- Scrapped idea of a leaderboard, instead opted for a career stats page for each user (addition of a stats database)
+- Clarified how we will use Count API and counter urls as other groups were confused.
+- Addition of SirvAPI (allows text overlay on images), potentially might add a timer API to limit the amount of time for each player's turn.
 
+- Still need to address our shop feature and if we want to continue with it. Have to think of reasonable powerups if we do decide to keep it.
 
 ==============================================================
