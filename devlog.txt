@@ -27,7 +27,10 @@ Revised DD:
 - Scrapped idea of a leaderboard, instead opted for a career stats page for each user (addition of a stats database)
 - Clarified how we will use Count API and counter urls as other groups were confused.
 - Addition of SirvAPI (allows text overlay on images), potentially might add a timer API to limit the amount of time for each player's turn.
+    - Have not done a card for this API yet, and there's a chance this might never get used
 
 - Still need to address our shop feature and if we want to continue with it. Have to think of reasonable powerups if we do decide to keep it.
 
+kevinL -- 2022-12-06 21:57
+- added a card for pastebin API and added pastebin API to the list of APIs, along with its purpose
 ==============================================================
