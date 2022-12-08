@@ -46,7 +46,7 @@ def register():
 
     # breakdown into GET and POST methods
 
-    #GET
+    # GET
     # if request.method == 'GET':
     #     input_username = request.args['username']
     #     input_password = request.args['password']
@@ -59,15 +59,15 @@ def register():
         input_confirm_password = request.form['confirm password']
 
     #if no registration info is inputted into the fields
-    if input_username.strip() == '' or input_password.strip() == '' or input_confirm_password.strip() == '':
+    if input_username == '' or input_password == '' or input_confirm_password == '':
         error_msg = ""
-        if input_username.strip() == '':
+        if input_username == '':
             error_msg += "Please enter a username. \n"
 
-        if input_password.strip() == '':
+        if input_password == '':
             error_msg += "Please enter a password. \n"
 
-        if input_confirm_password.strip() == '':
+        if input_confirm_password == '':
             error_msg += "Please confirm your password. \n"
 
         return render_template('register.html', message = error_msg)
@@ -82,7 +82,7 @@ def register():
         var = (input_username,)
         c.execute("select username from accounts where username=?", var)
 
-        # if there isn't an account associated with said username then create one
+         # if there isn't an account associated with said username then create one
         if not c.fetchone():
             c.execute("insert into accounts values(?, ?)", (input_username, input_password))
             return render_template('login.html')
@@ -94,7 +94,7 @@ def register():
 # redirect to user registration page (will be used in login.html)
 @app.route("/redirect-register", methods=['GET', 'POST'])
 def redirect_register():
-    return redirect("/register")
+    return render_template('register.html')
 
 
 # login process

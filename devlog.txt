@@ -59,4 +59,7 @@ prattayD -- 2022-12-07 20:42
 
 kevinL -- 2022-12-08 13:00
 - added some foundation css to register.html
+
+prattayD -- 2022-12-08 13:22
+- updated registration page so it wouldn't automatically throw errors that you didn't fill out the field.
 ==============================================================
