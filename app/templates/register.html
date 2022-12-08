@@ -1,0 +1,42 @@
+<!-- Adorable Macho Elephants: Prattay, Joseph, Kevin, Anjini
+SoftDev
+Period 07
+Dec 2022 -->
+
+<html>
+    <head>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation.min.css" crossorigin="anonymous">
+    </head>
+
+    <body>
+        <div class="grid-container">
+            <div class="row">
+                <form method="POST">
+                    <label> Username
+                        <input type="text" name="username">
+                    </label>
+
+                    <label> Password
+                        <input type="password" name="password">
+                    </label>
+
+                    <label> Confirm Password
+                        <input type="password" name="confirm password">
+                    </label>
+
+                    <input type="submit" name="submit" value="Register">
+                </form>
+                {{message}}
+            </div>
+
+            <div class="row">
+                <form method="GET" action="/redirect_login">
+                    <button name="return_to_login">
+                        Return to login (this is a button)
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </body>
+</html>

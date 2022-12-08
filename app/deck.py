@@ -1,3 +1,8 @@
+# Adorable Macho Elephants: Prattay, Joseph, Kevin, Anjini
+# SoftDev
+# Period 07
+# Dec 2022
+
 import requests
 
 def create_deck():
