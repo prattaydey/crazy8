@@ -150,6 +150,11 @@ def redirect_logout():
     session.pop('username', None)
     return redirect(url_for('index'))
 
+@app.route("/loadings", methods=['GET', 'POST'])
+def loadings():
+    return render_template('loading.html')
+
+
 
 # <------------------------------------- END OF LOGIN / REGISTER ------------------------------------->
 

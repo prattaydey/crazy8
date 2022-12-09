@@ -9,34 +9,43 @@ Dec 2022 -->
     </head>
 
     <body>
-        <div class="grid-container">
-            <div class="row">
-                <form action="/register", method="POST">
-                    <label> Username
-                        <input type="text" name="username">
-                    </label>
 
-                    <label> Password
-                        <input type="password" name="password">
-                    </label>
-
-                    <label> Confirm Password
-                        <input type="password" name="confirm password">
-                    </label>
-
-                    <input class="submit button" type="submit" name="submit" value="Register">
-                </form>
-                {{message}}
+        <div class="alert callout">
+        <h1>Registration Page</h1>
+        <h3>Register a new account here.</h3>
+        
+        <form action="/register", method="POST">
+            <div class="card_user">
+            <div class="card-divider">
+                <h4> Username: </h4>
+            </div>
+                <input type="text" name="username">
             </div>
 
-            <div class="row">
-                <form method="GET" action="/redirect_login">
-                    <button name="return_to_login" class="button">
-                        Return to login
-                    </button>
-                </form>
+            <div class="card_pass">
+            <div class="card-divider">
+                <h4> Password: </h4>
             </div>
-        </div>
+                <input type="password" name="password">
+            </div>
 
+            <div class="card_pass_confirm">
+                <div class="card-divider">
+                <h4> Confirm Password: </h4>
+                </div>
+                <input type="password" name="confirm password">
+            </div>
+
+            <div class="card_sub">
+            <button class="submit alert button"> Submit </button>
+            </div>
+            {{message}}
+        </form>
+
+        <form action="/redirect_login">
+            <button class="submit alert button"> 
+                Return to login page 
+            </button>
+        </form>
     </body>
 </html>
