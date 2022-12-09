@@ -101,10 +101,10 @@ def redirect_register():
 @app.route("/login", methods=['GET', 'POST'])
 def login():
 
-    # GET
-    if request.method == 'GET':
-        input_username = request.args['username']
-        input_password = request.args['password']
+    # # GET
+    # if request.method == 'GET':
+    #     input_username = request.args['username']
+    #     input_password = request.args['password']
 
     # POST
     if request.method == 'POST':
@@ -148,7 +148,7 @@ def login():
 def redirect_logout():
     # remove the username from the session if it's there
     session.pop('username', None)
-    return redirect(url_for('index'))
+    return redirect(url_for('login'))
 
 @app.route("/loadings", methods=['GET', 'POST'])
 def loadings():
