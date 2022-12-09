@@ -62,4 +62,10 @@ kevinL -- 2022-12-08 13:00
 
 prattayD -- 2022-12-08 13:22
 - updated registration page so it wouldn't automatically throw errors that you didn't fill out the field.
+
+anjiniK -- 2022-12-08 22:05
+- added foundation css to the login and register pages
+
+josephW -- 2022-12-08 22:05
+- added nav-bar and 3 cards on main.html. one card for stats, play now, and how to play each.
 ==============================================================
