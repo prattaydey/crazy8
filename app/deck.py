@@ -49,8 +49,9 @@ def get_pile_image_urls(deck_id, pile_name):
     return pile_image_urls
 
 def upload_deck_id(deck_id):
+    api_dev_key = open("keys/api_dev_key.txt", "r").read()
     data = {
-        'api_dev_key' : 'yhKT_CfcGPPOV2n7mYElTSEVdufWl4Wx',
+        'api_dev_key' : api_dev_key,
         'api_option' : 'paste',
         'api_paste_code' : deck_id,
         'api_paste_expire_date' : "10M"
