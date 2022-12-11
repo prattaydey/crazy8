@@ -38,7 +38,7 @@ Dec 2022 -->
               <li><a href="#">Experiences</a></li>
               <li><a href="#">Reviews</a></li>
               <li><a href="#">About Us</a></li>
-              <li><a href="#">Support</a></li>
+              <li><a href="{{url_for('crazy8')}}">Play</a></li>
               <li><a href="{{url_for('logout')}}">Logout</a></li>
           </ul>
       </div>
@@ -52,9 +52,9 @@ Dec 2022 -->
 
         <!-- Stats Card -->
         <div class="cell">
-          <div class="card">
+          <div class="card text-center">
             <div class="card-divider">
-              This is a personal stats card.
+              <h3> Stats </h3>
             </div>
             <img src="https://placekitten.com/400/300">
             <div class="card-section">
@@ -77,6 +77,10 @@ Dec 2022 -->
         </div>
 
       </div>
+    </div>
+
+    <div class="text-center">
+      <a class="button large" href="{{url_for('crazy8')}}" class="button">Play Game</a>
     </div>
 
     <!-- How to play Card -->

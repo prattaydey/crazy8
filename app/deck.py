@@ -49,14 +49,8 @@ def get_pile_image_urls(deck_id, pile_name):
     return pile_image_urls
 
 def upload_deck_id(deck_id):
-    api_dev_key = open("keys/api_dev_key.txt", "r").read()
-    data = {
-        'api_dev_key' : api_dev_key,
-        'api_option' : 'paste',
-        'api_paste_code' : deck_id,
-        'api_paste_expire_date' : "10M"
-    }
-    url = "https://pastebin.com/api/api_post.php"
+    data = str({"deck_id" : deck_id})
+    url = "https://jsonblob.com/api/jsonBlob"
     request = requests.post(url, data=data)
     return request.text
 
@@ -71,6 +65,7 @@ print("url: " + f"https://deckofcardsapi.com/api/deck/{deck_id}")
 print("player1: " + " ".join(get_pile_codes(deck_id, "player1")))
 print("player2: " + " ".join(get_pile_codes(deck_id, "player2")))
 print("player1: \n * " + "\n * ".join(get_pile_image_urls(deck_id, "player1")))
+print(upload_deck_id(deck_id))
 # url = upload_deck_id(deck_id)
 # print(url)
-print(get_deck_id("https://pastebin.com/4kXiP0jt"))
+# print(get_deck_id("https://pastebin.com/4kXiP0jt"))

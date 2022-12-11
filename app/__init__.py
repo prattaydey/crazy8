@@ -147,8 +147,15 @@ def main():
         return render_template('main.html')
     else:
         return redirect("/login")
+        
 # <------------------------------------- END OF LOGIN / REGISTER ------------------------------------->
 
+# page with the game
+@app.route("/crazy8", methods=['GET', 'POST'])
+def crazy8():
+    return render_template('crazy8.html')
+
+    
 if __name__ == "__main__": #false if this file imported as module
     #enable debugging, auto-restarting of server when this file is modified
     app.debug = True
