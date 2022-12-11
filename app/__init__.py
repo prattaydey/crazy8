@@ -26,40 +26,28 @@ db.commit()
 @app.route("/", methods=['GET', 'POST'])
 def index():
     if 'username' in session:
-        return render_template('main.html', username = session['username'])
-    return redirect(url_for('redirect_login'))
-
-# if user doesn't already have a session then prompt login
-@app.route("/redirect_login", methods=['GET', 'POST'])
-def redirect_login():
-    print(session)
-    return render_template('login.html')
-
+        return redirect("/main")
+    return redirect("/login")
 
 # REGISTER
 @app.route("/register", methods=['GET', 'POST'])
 def register():
+    # Already logged in
+    if 'username' in session:
+        return redirect("/main")
     
-    input_username = ""
-    input_password = ""
-    input_confirm_password = ""
-
-    # breakdown into GET and POST methods
-
     # GET
-    # if request.method == 'GET':
-    #     input_username = request.args['username']
-    #     input_password = request.args['password']
-    #     input_confirm_password = request.args['confirm password']
+    if request.method == 'GET':
+        return render_template('register.html')
 
-    #POST
+    # POST
     if request.method == 'POST':
         input_username = request.form['username']
         input_password = request.form['password']
         input_confirm_password = request.form['confirm password']
 
-    #if no registration info is inputted into the fields
-    if input_username == '' or input_password == '' or input_confirm_password == '':
+    # if no registration info is inputted into the fields
+    if input_username.strip() == '' or input_password.strip() == '' or input_confirm_password.strip() == '':
         error_msg = ""
         if input_username == '':
             error_msg += "Please enter a username. \n"
@@ -74,15 +62,15 @@ def register():
         
     # if info is entered into fields
     else:
-        #Checks for password/confirm password match
+        # Checks for password/confirm password match
         if input_password != input_confirm_password:
             return render_template('register.html', message = "Passwords do not match. Please try again.")
 
-        #Checks for existing username in accounts table
+        # Checks for existing username in accounts table
         var = (input_username,)
         c.execute("select username from accounts where username=?", var)
 
-         # if there isn't an account associated with said username then create one
+        # if there isn't an account associated with said username then create one
         if not c.fetchone():
             c.execute("insert into accounts values(?, ?)", (input_username, input_password))
             return render_template('login.html')
@@ -90,31 +78,24 @@ def register():
         else:
             return render_template('register.html', message = "Username is already taken. Please select another username.")
 
-
-# redirect to user registration page (will be used in login.html)
-@app.route("/redirect-register", methods=['GET', 'POST'])
-def redirect_register():
-    return render_template('register.html')
-
-
 # login process
 @app.route("/login", methods=['GET', 'POST'])
 def login():
+    # Already logged in
+    if 'username' in session:
+        app.redirect("/main")
 
-    # # GET
-    # if request.method == 'GET':
-    #     input_username = request.args['username']
-    #     input_password = request.args['password']
+    # GET
+    if request.method == "GET":
+        return render_template("login.html")
 
     # POST
     if request.method == 'POST':
         input_username = request.form['username']
         input_password = request.form['password']
 
-    # Searchs accounts table for user-password combination
-    login_check = c.execute("select username from accounts where username=? and password=?;", (input_username, input_password))
-    username_check = c.execute("select username from accounts where username=?;", (input_username,))
-    password_check = c.execute("select username from accounts where password=?;", (input_password,))
+    # Searches accounts table for user-password combination
+    c.execute("select username from accounts where username=? and password=?;", (input_username, input_password))
 
     # login_check
     if c.fetchone():
@@ -125,17 +106,21 @@ def login():
         if request.method == 'POST': #For 'post'
             session['username'] = request.form['username'] # stores username in session
 
-        return render_template('main.html', username = session['username'])
+        return redirect("/main")
 
     else:
         print("Login failed")
         error_msg = ''
+        username_check = "select username from accounts where username=?;"
+        password_check = "select username from accounts where password=?;"
 
         # Username check
+        c.execute(username_check, (input_username,))
         if not c.fetchone():
             error_msg += "Username is incorrect or not found. \n"
 
         #Password check
+        c.execute(password_check, (input_password,))
         if not c.fetchone():
             error_msg += "Password is incorrect or not found. \n"
 
@@ -145,17 +130,23 @@ def login():
 
 # logout and redirect to login page
 @app.route("/logout", methods=['GET', 'POST'])
-def redirect_logout():
+def logout():
     # remove the username from the session if it's there
     session.pop('username', None)
-    return redirect(url_for('login'))
+    return redirect("/login")
+
 
 @app.route("/loadings", methods=['GET', 'POST'])
 def loadings():
     return render_template('loading.html')
 
 
-
+@app.route("/main", methods=['GET', 'POST'])
+def main():
+    if 'username' in session:
+        return render_template('main.html')
+    else:
+        return redirect("/login")
 # <------------------------------------- END OF LOGIN / REGISTER ------------------------------------->
 
 if __name__ == "__main__": #false if this file imported as module

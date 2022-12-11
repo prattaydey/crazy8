@@ -19,22 +19,28 @@ Dec 2022 -->
       <h4>Enter your username and password below to proceed.</h4>
       
       <form action="/login", method="POST">
-        <div class="card_user" style="width: 100px;">
-          <div class="card-divider">
-            <h4> Username: </h4>
-          </div>
+        <div style="width: 400px;">
+          <div class="card_user">
+            <div class="card-divider">
+              <h4> Username: </h4>
+            </div>
             <input type="text" name="username">
-        </div>
-
-        <div class="card_pass" style="width: 100px;">
-          <div class="card-divider">
-            <h4> Password: </h4>
           </div>
-            <input type="password" name="password">
         </div>
 
-        <div class="card_sub">
-          <button class="submit primary button"> Submit </button>
+        <div style="width: 400px;">
+          <div class="card_pass">
+            <div class="card-divider">
+              <h4> Password: </h4>
+            </div>
+            <input type="password" name="password">
+          </div>
+        </div>
+
+        <div style="width: 400px;">
+          <div class="card_sub">
+            <button class="hollow submit primary button"> Login </button>
+          </div>
         </div>
       </form>
 
@@ -48,22 +54,19 @@ Dec 2022 -->
       </h3>
 
       <div class="primary callout_register">
-        <button class="button" type="button" name="register">
-          <a href="{{ url_for('redirect_register')}}">Register</a>
+        <button class="hollow button" type="button" name="register">
+          <a href="{{ url_for('register')}}">Register</a>
        </button>
       </div>
 
-      <button class="button" type="button" name="register">
-        <a href="{{ url_for('redirect_register')}}">Click Me</a>
-     </button>
-
       <div class="primary callout_register">
-        <button type="button" name="loadings">
+        <button type="hollow button" name="loadings">
           <a href="{{ url_for('loadings')}}">loading</a>
         </button>
       </div>
 
     </div>
   </body>
+
 
 </html>

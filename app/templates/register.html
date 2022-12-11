@@ -15,21 +15,21 @@ Dec 2022 -->
         <h3>Register a new account here.</h3>
         
         <form action="/register", method="POST">
-            <div class="card_user">
-            <div class="card-divider">
-                <h4> Username: </h4>
-            </div>
+            <div class="card_user" style="width: 400px;">
+                <div class="card-divider">
+                    <h4> Username: </h4>
+                </div>
                 <input type="text" name="username">
             </div>
 
-            <div class="card_pass">
-            <div class="card-divider">
-                <h4> Password: </h4>
-            </div>
+            <div class="card_pass" style="width: 400px;">
+                <div class="card-divider">
+                    <h4> Password: </h4>
+                </div>
                 <input type="password" name="password">
             </div>
 
-            <div class="card_pass_confirm">
+            <div class="card_pass_confirm" style="width: 400px;">
                 <div class="card-divider">
                 <h4> Confirm Password: </h4>
                 </div>
@@ -37,13 +37,13 @@ Dec 2022 -->
             </div>
 
             <div class="card_sub">
-            <button class="submit alert button"> Submit </button>
+                <button class="hollow submit alert button"> Submit </button>
             </div>
             {{message}}
         </form>
 
-        <form action="/redirect_login">
-            <button class="submit alert button"> 
+        <form action="/login">
+            <button class="hollow submit alert button"> 
                 Return to login page 
             </button>
         </form>
