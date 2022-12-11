@@ -71,4 +71,16 @@ josephW -- 2022-12-08 22:05
 
 kevinL -- 2022-12-08 20:29
 - added a method for uploading deck ids to pastebin and then subsequently discovered the post quota
+
+josephW -- 2022-12-08 17:10
+- made a loading page
+
+anjiniK -- 2022-12-08 17:10
+- fixed the buttons on the login page to make them visible
+
+prattayD -- 2022-12-08 17:10
+- fixed errors in the login and logout system that caused crashes
+
+kevinL -- 2022-12-08 17:10
+- removed some unused code
 ==============================================================
