@@ -83,4 +83,7 @@ prattayD -- 2022-12-11 17:10
 
 kevinL -- 2022-12-11 17:10
 - removed some unused code
+
+kevinL -- 2022-12-11 20:31
+- incorporated jsonBlob into deck.py
 ==============================================================

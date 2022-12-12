@@ -48,15 +48,30 @@ def get_pile_image_urls(deck_id, pile_name):
         pile_image_urls.append(card['image'])
     return pile_image_urls
 
-def upload_deck_id(deck_id):
-    data = str({"deck_id" : deck_id})
-    url = "https://jsonblob.com/api/jsonBlob"
-    request = requests.post(url, data=data)
-    return request.text
+def upload_deck_id(deck_id, room_name):
+    # get a dictionary of existing rooms and their ids
+    url = f"https://jsonblob.com/api/room/{blobId}"
+    existing_ids = requests.get(url).content
+    existing_ids = json.loads(existing_ids)
+    existing_ids = dict(existing_ids)
+    #print(existing_ids['test'])
 
-def get_deck_id(url):
-    request = requests.get(url[:20] + "/raw" + url[20:])
-    return request.text
+    # check if a room with that name already exists
+    if room_name in existing_ids:
+        print("A room with that name already exists")
+        return 
+
+    existing_ids.update({deck_id : room_name})
+    data = json.dumps(existing_ids)
+    
+    requests.put(url, data=data)
+    return url
+
+def get_rooms():
+    url = f"https://jsonblob.com/api/room/{blobId}"
+    request = requests.get(url)
+    rooms = json.loads(request.content)
+    return rooms
 
 deck_id = create_deck()
 setup(deck_id)
@@ -65,7 +80,5 @@ print("url: " + f"https://deckofcardsapi.com/api/deck/{deck_id}")
 print("player1: " + " ".join(get_pile_codes(deck_id, "player1")))
 print("player2: " + " ".join(get_pile_codes(deck_id, "player2")))
 print("player1: \n * " + "\n * ".join(get_pile_image_urls(deck_id, "player1")))
-print(upload_deck_id(deck_id))
-# url = upload_deck_id(deck_id)
-# print(url)
-# print(get_deck_id("https://pastebin.com/4kXiP0jt"))
+print(upload_deck_id(deck_id, "test2"))
+print(get_rooms())
