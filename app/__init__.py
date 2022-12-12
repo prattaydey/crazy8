@@ -10,6 +10,8 @@ from flask import request           #facilitate form submission
 from flask import session           #facilitate user sessions
 from flask import redirect, url_for #to redirect to a different URL
 import os
+import time
+from deck import *
 
 app = Flask(__name__)               #create Flask object
 app.secret_key = os.urandom(32)     #randomized string for SECRET KEY (for interacting with operating system)
@@ -153,7 +155,8 @@ def main():
 # page with the game
 @app.route("/crazy8", methods=['GET', 'POST'])
 def crazy8():
-    return render_template('crazy8.html')
+    deckID = create_deck()
+    return render_template('crazy8.html', img=draw_from_deck(deckID)[0]['image'])
 
     
 if __name__ == "__main__": #false if this file imported as module
