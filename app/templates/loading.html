@@ -1,84 +1,41 @@
 <!DOCTYPE html>
 <html>
-<header>
-    <link rel="stylesheet" href="static/css/loading.css">
-</header>
+  <header>
+      <!-- Foundation CSS -->
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation.min.css" crossorigin="anonymous">
+          
+      <!-- Loading screen CSS -->
+      <link rel="stylesheet" href="static/css/loading.css">
 
-<div>
-  <canvas id='canvas'></canvas>
+  </header>
 
-  <script src="static/js/loading.js"></script>
-</div>
-
-<div class="center">
-  LOADING
-</div>
-
-<body onload="redirect()"> 
-
-  <script>
-    function redirect(){
-      const sleep = (delay) => new Promise((resolve) => setTimeout(resolve,delay))
-      const redirecting = async () =>{
-        await sleep(10000)
-        //let location = console.log(location.href)
-        //let length = location.length
-        //location.href = (location.substr(length-4)).concat("crazy8")
-        const lengthing = (window.location.href).length
-        location.href = ((window.location.href).substr(0,lengthing-8)).concat("crazy8")
-      }
-      redirecting()
-    }
-  </script>
-
-</body>
-
-
-
-<!--
-  
-  <div id="wrapper">
-    <section>
-      <ul id="gallery">
-        <li>
-          <a href="#">
-            <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/25480/numbers-01.jpg" alt="">
-            <p>Experimentation with color and texture.</p>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/25480/numbers-02.jpg" alt="">
-            <p>Playing with blending modes in Photoshop.</p>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/25480/numbers-06.jpg" alt="">
-            <p>Trying to create an 80's style of glows.</p>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/25480/numbers-09.jpg" alt="">
-            <p>Drips created using Photoshop brushes.</p>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/25480/numbers-12.jpg" alt="">
-            <p>Creating shapes using repetition.</p>
-          </a>
-        </li>
-      </ul>
-    </section>
-    <footer>
-      <a href="https://twitter.com/nickrp"><img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/25480/twitter-wrap.png" alt="Twitter Logo" class="social-icon"></a>
-      <a href="https://facebook.com/nickpettit"><img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/25480/facebook-wrap.png" alt="Facebook Logo" class="social-icon"></a>
-      <p>&copy; 2014 Nick Pettit.</p>
-    </footer>
+  <div>
+    <canvas id='canvas'></canvas>
+    <div class="secondary callout small">
+      <h5 class="centered">Loading...</h5>
+    </div>
+    <script src="static/js/loading.js"></script>
   </div>
 
-  -->
+  <!-- <div class="callout">
+    LOADING
+  </div> -->
 
-  </html>
+  <body onload="redirect()"> 
+
+    <script>
+      function redirect(){
+        const sleep = (delay) => new Promise((resolve) => setTimeout(resolve,delay))
+        const redirecting = async () =>{
+          await sleep(10000)
+          //let location = console.log(location.href)
+          //let length = location.length
+          //location.href = (location.substr(length-4)).concat("crazy8")
+          const lengthing = (window.location.href).length
+          location.href = ((window.location.href).substr(0,lengthing-8)).concat("crazy8")
+        }
+        //redirecting()
+      }
+    </script>
+  </body>
+</html>

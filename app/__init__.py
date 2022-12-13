@@ -137,6 +137,7 @@ def logout():
     session.pop('username', None)
     return redirect("/login")
 
+# <------------------------------------- END OF LOGIN / REGISTER ------------------------------------->
 
 @app.route("/loadings", methods=['GET', 'POST'])
 def loadings():
@@ -150,17 +151,17 @@ def main():
         rooms = get_rooms()
         # tell the variable that it is a dictionary
         rooms = dict(rooms)
-        # get the values of the dictionary, which are dictionaries consisting of "room_name": "not_a_real_room", "player1": "not_a_real_player", "player2": "not_a_real_player"
-        rooms = rooms.values()
-        room_names = []
-        for dictionary in rooms:
-            room_names.append(dictionary['room_name'])
+        # returns a list of deck ids
+        ids = rooms.keys()
         
-        return render_template('main.html', room_names=room_names)
+        return render_template('main.html', room_names=rooms, ids=ids)
     else:
         return redirect("/login")
-        
-# <------------------------------------- END OF LOGIN / REGISTER ------------------------------------->
+
+@app.route("/connect", methods=["POST"])
+def connect():
+    deck_id = request.form['join']
+    return "hi"
 
 # page with the game
 @app.route("/crazy8", methods=['GET', 'POST'])
