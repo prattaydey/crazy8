@@ -5,3 +5,27 @@ body {
   max-height: 90%;
   max-width: 90%;
 }
+
+.loadingH{
+  text-align:center;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  color: #351330;
+}
+
+.loading{
+  position: absolute;
+  font-size: 40px;
+}
+
+.center {
+    position:absolute;
+    height: 50%;
+    width: 100%;
+    left: 100%;
+    top: 50%;
+    margin-top:- 50% px;
+    margin-left:- 50% px;
+}

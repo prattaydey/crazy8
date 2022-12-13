@@ -4,29 +4,34 @@
     <link rel="stylesheet" href="static/css/loading.css">
 </header>
 
-<body>
-<canvas id='canvas'></canvas>
+<div>
+  <canvas id='canvas'></canvas>
 
-<script src="static/js/loading.js"></script> 
-</body>
+  <script src="static/js/loading.js"></script>
+</div>
 
-<div onload="redirect()">
+<div class="center">
+  LOADING
+</div>
+
+<body onload="redirect()"> 
+
   <script>
     function redirect(){
       const sleep = (delay) => new Promise((resolve) => setTimeout(resolve,delay))
       const redirecting = async () =>{
-        await sleep(100)
+        await sleep(10000)
         //let location = console.log(location.href)
         //let length = location.length
         //location.href = (location.substr(length-4)).concat("crazy8")
-        location.href = console.log(location.href)
+        const lengthing = (window.location.href).length
+        location.href = ((window.location.href).substr(0,lengthing-8)).concat("crazy8")
       }
-
       redirecting()
     }
   </script>
 
-</div>
+</body>
 
 
 

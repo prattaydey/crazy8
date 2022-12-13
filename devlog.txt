@@ -74,6 +74,8 @@ kevinL -- 2022-12-08 20:29
 
 josephW -- 2022-12-11 17:10
 - made a loading page
+- added loading.css
+- added loading.js
 
 anjiniK -- 2022-12-11 17:10
 - fixed the buttons on the login page to make them visible
@@ -91,4 +93,8 @@ anjiniK and kevinL-- 2022-12-12 21:03
 - updated crazy8.html to display the cards in each player's hand, as well as the card currently in play!
 - modified draw_from_deck() to make it easier to use
 - added button on game page to take us back to the main page
+
+josephw -- 2022-12-12 22:10
+- made loading page display an animated splash background
+- loading page has ability to automatically load the crazy8 page after a set amount of time
 ==============================================================
