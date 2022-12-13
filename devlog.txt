@@ -87,8 +87,11 @@ kevinL -- 2022-12-11 17:10
 kevinL -- 2022-12-11 20:31
 - incorporated jsonBlob into deck.py
 
-anjiniK and kevinL-- 2022-12-12 21:03
+anjiniK and kevinL -- 2022-12-12 21:03
 - updated crazy8.html to display the cards in each player's hand, as well as the card currently in play!
 - modified draw_from_deck() to make it easier to use
 - added button on game page to take us back to the main page
+
+kevinL -- 2022-12-12 21:57
+- updated main() and main.html to display multiple rooms
 ==============================================================
