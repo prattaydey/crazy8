@@ -10,6 +10,26 @@
 <script src="static/js/loading.js"></script> 
 </body>
 
+<div onload="redirect()">
+  <script>
+    function redirect(){
+      const sleep = (delay) => new Promise((resolve) => setTimeout(resolve,delay))
+      const redirecting = async () =>{
+        await sleep(100)
+        //let location = console.log(location.href)
+        //let length = location.length
+        //location.href = (location.substr(length-4)).concat("crazy8")
+        location.href = console.log(location.href)
+      }
+
+      redirecting()
+    }
+  </script>
+
+</div>
+
+
+
 <!--
   
   <div id="wrapper">

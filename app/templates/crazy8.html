@@ -10,14 +10,38 @@ Dec 2022 -->
     </head>
 
     <body>
+      <form action="/main">
+        <button class="button"> 
+            Return to main page 
+        </button>
+      </form>
+
       <div class="grid-container">
-        <div class="row">
-          <div class="columns small-3 small-centered">
-            <img src="{{img}}">
-          </div>
+        <div class="grid-x grid-padding-x align-center">
+          {% for card in hand1 %}
+            <img src="{{card}}" style="width: 10%;">
+          {% endfor %}
         </div>
-        <img src="https://deckofcardsapi.com/static/img/6H.png">
       </div>
-    </body>
+
+      <br>
+      <br>
+
+      <div class="grid-container">
+        <div class="grid-x grid-padding-x align-center">
+          <img src="{{starting_card}}" style="width: 10%;">
+        </div>
+      </div>
+
+      <br>
+      <br>
+
+      <div class="grid-container">
+        <div class="grid-x grid-padding-x align-center">
+          {% for card in hand2 %}
+            <img src="{{card}}" style="width: 10%;">
+          {% endfor %}
+        </div>
+      </div>
 
 </html>

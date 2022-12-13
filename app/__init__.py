@@ -156,7 +156,13 @@ def main():
 @app.route("/crazy8", methods=['GET', 'POST'])
 def crazy8():
     deckID = create_deck()
-    return render_template('crazy8.html', img=draw_from_deck(deckID)[0]['image'])
+    # pileID = ret_pile_name()
+    setup(deckID)
+    hand1 = get_pile_image_urls(deckID, "player1")
+    hand2 = get_pile_image_urls(deckID, "player2")
+    starting_card = get_pile_image_urls(deckID, "play")[0]
+
+    return render_template('crazy8.html', hand1=hand1, hand2=hand2, starting_card=starting_card)
 
     
 if __name__ == "__main__": #false if this file imported as module
