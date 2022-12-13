@@ -146,7 +146,17 @@ def loadings():
 @app.route("/main", methods=['GET', 'POST'])
 def main():
     if 'username' in session:
-        return render_template('main.html')
+        # returns a dictionary
+        rooms = get_rooms()
+        # tell the variable that it is a dictionary
+        rooms = dict(rooms)
+        # get the values of the dictionary, which are dictionaries consisting of "room_name": "not_a_real_room", "player1": "not_a_real_player", "player2": "not_a_real_player"
+        rooms = rooms.values()
+        room_names = []
+        for dictionary in rooms:
+            room_names.append(dictionary['room_name'])
+        
+        return render_template('main.html', room_names=room_names)
     else:
         return redirect("/login")
         
@@ -160,9 +170,9 @@ def crazy8():
     setup(deckID)
     hand1 = get_pile_image_urls(deckID, "player1")
     hand2 = get_pile_image_urls(deckID, "player2")
-    starting_card = get_pile_image_urls(deckID, "play")[0]
+    card_in_play = get_pile_image_urls(deckID, "play")[0]
 
-    return render_template('crazy8.html', hand1=hand1, hand2=hand2, starting_card=starting_card)
+    return render_template('crazy8.html', opponents_hand=hand1, my_hand=hand2, card_in_play=card_in_play)
 
     
 if __name__ == "__main__": #false if this file imported as module

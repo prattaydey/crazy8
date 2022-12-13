@@ -62,12 +62,7 @@ def upload_deck_id(deck_id, room_name):
     existing_ids = dict(existing_ids)
     #print(existing_ids['test'])
 
-    # check if a room with that name already exists
-    if room_name in existing_ids:
-        print("A room with that name already exists")
-        return 
-
-    existing_ids.update({deck_id : room_name})
+    existing_ids.update({deck_id : {"room_name" : room_name}})
     data = json.dumps(existing_ids)
     
     requests.put(url, data=data)
@@ -79,12 +74,12 @@ def get_rooms():
     rooms = json.loads(request.content)
     return rooms
 
-# deck_id = create_deck()
+deck_id = create_deck()
 # setup(deck_id)
 # print("deck_id: " + deck_id)
 # print("url: " + f"https://deckofcardsapi.com/api/deck/{deck_id}")
 # print("player1: " + " ".join(get_pile_codes(deck_id, "player1")))
 # print("player2: " + " ".join(get_pile_codes(deck_id, "player2")))
 # print("player1: \n * " + "\n * ".join(get_pile_image_urls(deck_id, "player1")))
-# print(upload_deck_id(deck_id, "test2"))
+print(upload_deck_id(deck_id, "test2"))
 # print(get_rooms())
