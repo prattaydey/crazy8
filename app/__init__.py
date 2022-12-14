@@ -189,6 +189,12 @@ def crazy8():
 
     return render_template('crazy8.html', opponents_hand=hand1, my_hand=hand2, card_in_play=card_in_play)
 
+def game(player, opponent, deck_id, pile_id):
+    #determining the winner or loser
+
+    else: 
+        if player == null:
+            return (You)
     
 if __name__ == "__main__": #false if this file imported as module
     #enable debugging, auto-restarting of server when this file is modified

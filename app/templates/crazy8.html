@@ -16,18 +16,18 @@ Dec 2022 -->
             Return to main page 
         </button>
       </form>
-
+      <!-- opponents's hand  -->
       <div class="grid-container">
         <div class="grid-x grid-padding-x align-center">
           {% for card in opponents_hand %}
-            <img src="{{card}}" style="width: 10%;">
+            <img src="static/playing_card.png" style="width: 10%;">
           {% endfor %}
         </div>
       </div>
 
       <br>
       <br>
-
+      <!-- card in play -->
       <div class="grid-container">
         <div class="grid-x grid-padding-x align-center">
           {% for card in card_in_play %} 
@@ -38,7 +38,7 @@ Dec 2022 -->
 
       <br>
       <br>
-
+      <!-- player's hand -->
       <div class="grid-container">
         <div class="grid-x grid-padding-x align-center">
           {% for card in my_hand %}
