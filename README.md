@@ -7,6 +7,12 @@ Anjini Katari:  Devo
 ## Summary:
 A recreation of Crazy 8s / Uno with the ability to play with other users
 
+## API Cards:
+Deck of Cards: https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_deck_of_cards.md  
+Count: https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_CountAPI.md  
+Dictionary: https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_dictionaryAPI.md  
+Pastebin: https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_pastebin.md  
+
 ## Launch Codes:
 Clone the repo into your local machine
 ```
