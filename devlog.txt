@@ -100,4 +100,9 @@ kevinL -- 2022-12-12 21:57
 josephw -- 2022-12-12 22:10
 - made loading page display an animated splash background
 - loading page has ability to automatically load the crazy8 page after a set amount of time
+
+kevinL -- 2022-12-14 00:16
+- made a connect method so you can now actually join the games shown on the main page
+- updated crazy8.html to have more specific variable names
+- updated buttons on main.html to use the connect method
 ==============================================================

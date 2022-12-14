@@ -30,7 +30,9 @@ Dec 2022 -->
 
       <div class="grid-container">
         <div class="grid-x grid-padding-x align-center">
-          <img src="{{card_in_play}}" style="width: 10%;">
+          {% for card in card_in_play %} 
+            <img src="{{card}}" style="width: 10%;">
+          {% endfor %} 
         </div>
       </div>
 

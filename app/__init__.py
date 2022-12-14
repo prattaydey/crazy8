@@ -85,7 +85,7 @@ def register():
 def login():
     # Already logged in
     if 'username' in session:
-        app.redirect("/main")
+        return redirect("/main")
 
     # GET
     if request.method == "GET":
@@ -148,7 +148,7 @@ def loadings():
 def main():
     if 'username' in session:
         # returns a dictionary
-        rooms = get_rooms()
+        rooms = get_all_rooms()
         # tell the variable that it is a dictionary
         rooms = dict(rooms)
         # returns a list of deck ids
@@ -158,10 +158,24 @@ def main():
     else:
         return redirect("/login")
 
-@app.route("/connect", methods=["POST"])
-def connect():
-    deck_id = request.form['join']
-    return "hi"
+@app.route("/connect/<deck_id>", methods=['GET', 'POST'])
+def connect(deck_id):
+    if not 'username' in session:
+        return redirect('/login')
+
+    room = get_room(deck_id)
+
+    if not 'player1' in room:
+        my_hand = get_pile_image_urls(deck_id, "player1")
+        opponents_hand = get_pile_image_urls(deck_id, "player2")
+    elif not 'player2' in room:
+        my_hand = get_pile_image_urls(deck_id, "player2")
+        opponents_hand = get_pile_image_urls(deck_id, "player1")
+    else:
+        return "this room is full :("
+        
+    starting_card = get_pile_image_urls(deck_id, "play")
+    return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=starting_card)
 
 # page with the game
 @app.route("/crazy8", methods=['GET', 'POST'])
@@ -171,7 +185,7 @@ def crazy8():
     setup(deckID)
     hand1 = get_pile_image_urls(deckID, "player1")
     hand2 = get_pile_image_urls(deckID, "player2")
-    card_in_play = get_pile_image_urls(deckID, "play")[0]
+    card_in_play = get_pile_image_urls(deckID, "play")
 
     return render_template('crazy8.html', opponents_hand=hand1, my_hand=hand2, card_in_play=card_in_play)
 

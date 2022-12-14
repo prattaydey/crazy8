@@ -105,14 +105,13 @@ Dec 2022 -->
                       deck_id: {{id}}
                   </div>
 
-                  <form method="POST" action="/connect" name="join">
-                      <div class="text-center">
-                          <button class="button" value="{{id}}">
-                            Join
-                          </button>
-
-                      </div>
-                  </form>
+                  <a href="/connect/{{id}}">
+                    <div class="text-center">
+                        <button class="button">
+                          Join
+                        </button>
+                    </div>
+                  </a>
               </div>
             </div>
             {% endfor %}

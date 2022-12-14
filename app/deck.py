@@ -68,11 +68,17 @@ def upload_deck_id(deck_id, room_name):
     requests.put(url, data=data)
     return url
 
-def get_rooms():
+def get_all_rooms():
     url = f"https://jsonblob.com/api/room/{blobId}"
     request = requests.get(url)
     rooms = json.loads(request.content)
     return rooms
+
+def get_room(deck_id):
+    url = f"https://jsonblob.com/api/room/{blobId}"
+    request = requests.get(url)
+    rooms = json.loads(request.content)
+    return rooms[deck_id]
 
 # deck_id = create_deck()
 # setup(deck_id)
