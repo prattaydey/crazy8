@@ -5,13 +5,12 @@ Kevin Li:  Devo
 Joseph Wu:  Devo  
 Anjini Katari:  Devo
 ## Summary:
-A recreation of Crazy 8s / Uno with the ability to play with other users
+A recreation of Crazy 8s / Uno with the ability to play with other users. You can create and join games on the main page, which displays the same list of rooms to all users on the site
 
 ## API Cards:
 Deck of Cards: https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_deck_of_cards.md  
 Count: https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_CountAPI.md  
-Dictionary: https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_dictionaryAPI.md  
-Pastebin: https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_pastebin.md  
+jsonblob: https://github.com/stuy-softdev/notes-and-code/blob/main/api_kb/411_on_jsonblob.md
 
 ## Launch Codes:
 Clone the repo into your local machine
