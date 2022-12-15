@@ -146,7 +146,7 @@ def loadings():
 
 @app.route("/main", methods=['GET', 'POST'])
 def main():
-    if request.method == "POST":
+    if request.method == "POST" and 'room_name' in request.form:
         room_name = request.form['room_name']
         deck_id = create_deck()
         setup(deck_id)
@@ -169,6 +169,7 @@ def connect(deck_id):
     if not 'username' in session:
         return redirect('/login')
 
+    
     room = get_room(deck_id)
 
     if not 'player1' in room:
@@ -178,10 +179,10 @@ def connect(deck_id):
         my_hand = get_pile_image_urls(deck_id, "player2")
         opponents_hand = get_pile_image_urls(deck_id, "player1")
     else:
-        return "this room is full :("
+        return "this room is full :(" 
         
     starting_card = get_pile_image_urls(deck_id, "play")
-    return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=starting_card)
+    return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=starting_card, deck_id=deck_id, play="play", pile_id="player1")
 
 # page with the game
 @app.route("/crazy8", methods=['GET', 'POST'])

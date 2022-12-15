@@ -79,7 +79,7 @@ def get_room(deck_id):
     rooms = json.loads(request.content)
     return rooms[deck_id]
 
-# draws card from the hand that has it, adds to pile in play
+# helper function -- draws card from the hand that has it, adds to pile in play
 def play_card(deck_id, card_code):
     return requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/pile/play/add/?cards={card_code}")
 
@@ -90,6 +90,25 @@ def card_check(deck_id, player_card):
         card_code = player_card['code']
         return play_card(deck_id, card_code)
     return False
+
+def add_player(deck_id, username):
+    room_dict = get_room(deck_id)
+    if not 'player1' in room_dict:
+        room_dict.update({"player1" : username})
+    elif not 'player2' in room_dict:
+        room_dict.update({"player2" : username})
+    else:
+        return False
+
+    return True
+
+def remove_player(deck_id):
+    return 1
+    
+
+
+def remaining_in_deck(deck_id):
+    get_deck = requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}").json()
 
 
 

@@ -36,28 +36,31 @@ Dec 2022 -->
         </div>
       </div>
 
-      <br>
-      <br>
-      <!-- player's hand -->
-      <!-- <div class="grid-container">
-        <div class="grid-x grid-margin-x small-up-2 small-up-2">
-          {% for card in my_hand %}
-            <div class="card-divider">
-              <div class="clear secondary button tiny center"> 
-                pick this card
-                <img src="{{card}}" style="width: 120px" center>
-              </div>
+      <!-- pick up pile -->
+      <div class="grid-container">
+        <div class="grid-x grid-padding-x">
+          <div class="card" style="width: 120px; background: rgba(186, 186, 186, 0);">
+            <div class="card-divider" style="background: rgba(186, 186, 186, 0);">
+              <div class="clear secondary button small center" action="get_pile_image_urls({{deck_id}}, {{play}})"> 
+                Pick up
+              </div>   
+            </div>     
+            <div class="card-section">
+              <img src="{{card}}" style="width: 10%;">
             </div>
-          {% endfor %}
+          </div>
         </div>
-      </div> -->
+      </div>
 
+      <br>
+      <br>
+      <!-- player's cards -->
       <div class="grid-container">
         <div class="grid-x grid-margin-x small-up-2 small-up-2">
           {% for card in my_hand %}
           <div class="card" style="width: 120px; background: rgba(186, 186, 186, 0);">
             <div class="card-divider" style="background: rgba(186, 186, 186, 0);">
-              <div class="clear secondary button small center"> 
+              <div class="clear secondary button small center" action="draw_from_pile({{deck_id}}, {{plie_id}})"> 
                 Select
               </div>   
             </div>     
@@ -69,20 +72,5 @@ Dec 2022 -->
         </div>
       </div>
 
-      <!-- <div class="grid-container">
-        <div class="grid-x grid-margin-x small-up-2 small-up-2">
-          {% for card in my_hand %}
-          <div class="card" style="width: 80px;">
-            <div class="card-divider">
-              <div class="button tiny center"> 
-                pick this card
-              </div>
-            </div>
-            <img src="{{card}}" style="width: 120px" center>
-              used to be width: 10% 
-          </div>
-          {% endfor %}
-        </div>
-      </div> -->
 
 </html>
