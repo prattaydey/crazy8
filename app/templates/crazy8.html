@@ -55,13 +55,15 @@ Dec 2022 -->
       <div class="grid-container">
         <div class="grid-x grid-margin-x small-up-2 small-up-2">
           {% for card in my_hand %}
-          <div class="card" style="width: 120px;">
-            <div class="card-divider">
+          <div class="card" style="width: 120px; background: rgba(186, 186, 186, 0);">
+            <div class="card-divider" style="background: rgba(186, 186, 186, 0);">
               <div class="clear secondary button small center"> 
-                pick this card
+                Select
               </div>   
             </div>     
-            <img src="{{card}}" style="width: 120px" center>
+            <div class="card-section">
+              <img src="{{card}}" style="width: 120px;" center>
+            </div>
           </div>
           {% endfor %}
         </div>

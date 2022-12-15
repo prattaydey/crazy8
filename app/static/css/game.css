@@ -2,3 +2,7 @@ body {
     background-image: url("/static/gameboard.jpg");
     background-size: cover;
 }
+
+div.card {
+    background: rgba(186, 186, 186, 0);
+}
