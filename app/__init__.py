@@ -146,6 +146,12 @@ def loadings():
 
 @app.route("/main", methods=['GET', 'POST'])
 def main():
+    if request.method == "POST":
+        room_name = request.form['room_name']
+        deck_id = create_deck()
+        setup(deck_id)
+        upload_deck_id(deck_id, room_name)
+
     if 'username' in session:
         # returns a dictionary
         rooms = get_all_rooms()
@@ -158,7 +164,7 @@ def main():
     else:
         return redirect("/login")
 
-@app.route("/connect/<deck_id>", methods=['GET', 'POST'])
+@app.route("/<deck_id>", methods=['GET', 'POST'])
 def connect(deck_id):
     if not 'username' in session:
         return redirect('/login')
@@ -187,15 +193,10 @@ def crazy8():
     hand2 = get_pile_image_urls(deckID, "player2")
     card_in_play = get_pile_image_urls(deckID, "play")
 
+    # draw_from_pile(deckID, hand1)
+
     return render_template('crazy8.html', opponents_hand=hand1, my_hand=hand2, card_in_play=card_in_play)
 
-def game(player, opponent, deck_id, pile_id):
-    #determining the winner or loser
-
-    else: 
-        if player == null:
-            return (You)
-    
 if __name__ == "__main__": #false if this file imported as module
     #enable debugging, auto-restarting of server when this file is modified
     app.debug = True

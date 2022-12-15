@@ -105,7 +105,7 @@ Dec 2022 -->
                       deck_id: {{id}}
                   </div>
 
-                  <a href="/connect/{{id}}">
+                  <a href="/{{id}}">
                     <div class="text-center">
                         <button class="button">
                           Join
@@ -122,6 +122,21 @@ Dec 2022 -->
       <a class="button large" href="{{url_for('crazy8')}}" class="button">Play Game</a>
     </div>
 
+    <form method="POST">
+      <div class="grid-container" style="width: 50%;">
+          <div class="input-group">
+            <span class="input-group-label">
+              Room Name
+            </span>
+
+            <input class="input-group-field" type="text" name="room_name">
+
+            <div class="input-group-button">
+              <input type="submit" class="button" value="Create">
+            </div>
+          </div>
+      </div>
+    <form>
     <!-- How to play Card -->
 
     <div class="grid-container" style="width: 90%;">

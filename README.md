@@ -1,14 +1,14 @@
 # p1_AdorableMachoElephants
 ## to-do:
 - make a way to interact with cards
-- make a way to create rooms
+- make a way to create rooms (done)
 - display opponent's hand face down
 - incorporate count api for stats
 - establish a turn order
 - make a way to ensure they dont try to put down the wrong card (ie 2D on 5H)
 - a way to determine win/lose and update stats accordingly
     - if the pile rusns out of cards, you win 
-- Extr stuff
+- Extra stuff
     * Powerups
     * chat system
     * a timer to prevent users from stalling

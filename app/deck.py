@@ -23,7 +23,6 @@ def draw_from_deck(deck_id):
 def draw_from_pile(deck_id, pile_name):
     return requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/pile/{pile_name}/draw").json()['cards'][0]
 
-
 #creates 2 hands, each one with 8 cards 
 def setup(deck_id):
     shuffle_deck(deck_id)
@@ -79,6 +78,20 @@ def get_room(deck_id):
     request = requests.get(url)
     rooms = json.loads(request.content)
     return rooms[deck_id]
+
+# draws card from the hand that has it, adds to pile in play
+def play_card(deck_id, card_code):
+    return requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/pile/play/add/?cards={card_code}")
+
+# checks to see if card is valid to deal
+def card_check(deck_id, player_card):
+    top_card = requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/pile/play/").json()['cards'][0]
+    if player_card['suit'] == top_card['suit'] or player_card['value'] == top_card['value']:
+        card_code = player_card['code']
+        return play_card(deck_id, card_code)
+    return False
+
+
 
 # deck_id = create_deck()
 # setup(deck_id)

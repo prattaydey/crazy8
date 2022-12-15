@@ -20,7 +20,7 @@ Dec 2022 -->
       <div class="grid-container">
         <div class="grid-x grid-padding-x align-center">
           {% for card in opponents_hand %}
-            <img src="static/playing_card.png" style="width: 10%;">
+            <img src="/static/playing_card.png" style="width: 10%;">
           {% endfor %}
         </div>
       </div>
@@ -39,12 +39,48 @@ Dec 2022 -->
       <br>
       <br>
       <!-- player's hand -->
-      <div class="grid-container">
-        <div class="grid-x grid-padding-x align-center">
+      <!-- <div class="grid-container">
+        <div class="grid-x grid-margin-x small-up-2 small-up-2">
           {% for card in my_hand %}
-            <img src="{{card}}" style="width: 10%;">
+            <div class="card-divider">
+              <div class="clear secondary button tiny center"> 
+                pick this card
+                <img src="{{card}}" style="width: 120px" center>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div> -->
+
+      <div class="grid-container">
+        <div class="grid-x grid-margin-x small-up-2 small-up-2">
+          {% for card in my_hand %}
+          <div class="card" style="width: 120px;">
+            <div class="card-divider">
+              <div class="clear secondary button small center"> 
+                pick this card
+              </div>   
+            </div>     
+            <img src="{{card}}" style="width: 120px" center>
+          </div>
           {% endfor %}
         </div>
       </div>
+
+      <!-- <div class="grid-container">
+        <div class="grid-x grid-margin-x small-up-2 small-up-2">
+          {% for card in my_hand %}
+          <div class="card" style="width: 80px;">
+            <div class="card-divider">
+              <div class="button tiny center"> 
+                pick this card
+              </div>
+            </div>
+            <img src="{{card}}" style="width: 120px" center>
+              used to be width: 10% 
+          </div>
+          {% endfor %}
+        </div>
+      </div> -->
 
 </html>

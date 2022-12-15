@@ -105,4 +105,16 @@ kevinL -- 2022-12-14 00:16
 - made a connect method so you can now actually join the games shown on the main page
 - updated crazy8.html to have more specific variable names
 - updated buttons on main.html to use the connect method
+
+prattayD -- 2022-12-14 20:25
+- created a function in deck.py to check whether or not a card is valid to deal
+
+kevinL -- 2022-12-14 20:26
+- created a method for making new rooms with user-inputted names
+- updated main.html with a form to submit room names and create rooms
+- changed the route of the connect method to fix an issue with loading images
+
+anjiniK -- 2022-12-14 20:29
+- found a way to choose the cards (next step is to link them to a function)
+
 ==============================================================
