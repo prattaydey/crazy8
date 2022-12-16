@@ -76,9 +76,9 @@ def card_check(deck_id, player_card):
     return False
 
 # adds a card to a pile 
-def add_to_pile(pile_name, ):
-    pile_name["play"] = "red"
-    return 1
+def add_to_pile(pile_name, deck_id, card_to_add):
+    add = requests.get(f"https://www.deckofcardsapi.com/api/deck/{deck_id}/pile/{pile_name}/add/?cards={card_to_add}")
+    return get_pile(deck_id, pile_name)
 
 # does what it says 
 def add_player(deck_id, username):

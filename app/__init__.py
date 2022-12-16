@@ -153,11 +153,18 @@ def loadings():
 @app.route("/main", methods=['GET', 'POST'])
 def main():
     if request.method == "POST" and 'room_name' in request.form:
+        #create a room
         room_name = request.form['room_name']
         deck_id = create_deck()
         setup(deck_id)
         upload_deck_id(deck_id, room_name)
         print("created room " + room_name + " with id " + deck_id)
+
+        #create a counter
+        r = requests.get(f"https://api.countapi.xyz/create?namespace={deck_id}").json()
+        response = json.loads(r)
+        counter_key = response['key']
+        print("created a counter at" + f"https://api.countapi.xyz/get/{deck_id}")
 
     if 'username' in session:
         # returns a dictionary
@@ -180,7 +187,7 @@ def leave():
     return redirect("/main")
         
 # starts up the room
-@app.route("/<deck_id>", methods=['POST'])
+@app.route("/<deck_id>", methods=['GET', 'POST'])
 def connect(deck_id):
     if not 'username' in session:
         print("user is not logged in. Redirecting to /login")
@@ -212,16 +219,17 @@ def connect(deck_id):
 
     card_in_play = get_pile(deck_id, "play")[0]
 
-    return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=card_in_play, deck_id=deck_id, play="play", pile_id="player1")
+    return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=card_in_play, deck_id=deck_id)
 
 #playing the game
 @app.route("/play", methods=['POST'])
 def play(deck_id):
     if request.method == "POST":
         card_check(deck_id, 'current_card')
-        starting_card = 'current_card["image"]'
+        #current card is the card you're putting down, card_in_play is the card in the center
+        add_to_pile("play", deck_id, 'current_card[id]')
 
-    return render_template("crazy8.html", )
+    return redirect('/<deck_id>', code=307)
 
 # page with the game
 @app.route("/crazy8", methods=['GET', 'POST'])
