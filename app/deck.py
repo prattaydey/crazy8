@@ -43,20 +43,6 @@ def get_pile(deck_id, pile_name):
     pile = requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/pile/{pile_name}/list").json()['piles'][pile_name]['cards']
     return pile
 
-def get_pile_codes(deck_id, pile_name):
-    pile = requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/pile/{pile_name}/list").json()['piles'][pile_name]['cards']
-    pile_codes = []
-    for card in pile:
-        pile_codes.append(card['code'])
-    return pile_codes
-
-def get_pile_image_urls(deck_id, pile_name):
-    pile = requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/pile/{pile_name}/list").json()['piles'][pile_name]['cards']
-    pile_image_urls = []
-    for card in pile:
-        pile_image_urls.append(card['image'])
-    return pile_image_urls
-
 def upload_deck_id(deck_id, room_name):
     # get a dictionary of existing rooms and their ids
     url = f"https://jsonblob.com/api/room/{blobId}"
@@ -71,17 +57,11 @@ def upload_deck_id(deck_id, room_name):
     requests.put(url, data=data)
     return url
 
-def get_all_rooms():
+def get_rooms():
     url = f"https://jsonblob.com/api/room/{blobId}"
     request = requests.get(url)
     rooms = json.loads(request.content)
     return dict(rooms)
-
-def get_room(deck_id):
-    url = f"https://jsonblob.com/api/room/{blobId}"
-    request = requests.get(url)
-    rooms = json.loads(request.content)
-    return dict(rooms[deck_id])
 
 # helper function -- draws card from the hand that has it, adds to pile in play
 def play_card(deck_id, card_code):
@@ -95,11 +75,16 @@ def card_check(deck_id, player_card):
         return play_card(deck_id, card_code)
     return False
 
-# 
+# adds a card to a pile 
+def add_to_pile(pile_name, ):
+    pile_name["play"] = "red"
+    return 1
 
 # does what it says 
 def add_player(deck_id, username):
-    rooms = get_all_rooms()
+    # get a dictionary of all the rooms
+    rooms = get_rooms()
+    # tell the dictionary that it's a dictionary
     room_dict = dict(rooms[deck_id])
 
     if not 'player1' in room_dict:
@@ -109,8 +94,10 @@ def add_player(deck_id, username):
     else:
         return False
 
+    # replace the current definition for deck_id with the modified one
     rooms[deck_id] = room_dict
 
+    # upload the data
     rooms = json.dumps(rooms)
     print(rooms)
     url = f"https://jsonblob.com/api/room/{blobId}"
@@ -119,28 +106,29 @@ def add_player(deck_id, username):
     return True
 
 def remove_player(deck_id, username):
-    rooms = get_all_rooms()
+    # get a dictionary of all the rooms
+    rooms = get_rooms()
+    # tell the dictionary it's a dictionary
     room_dict = dict(rooms[deck_id])
 
-    player_names = room_dict.values()
-    if username not in player_names:
-        return False
+    # if the user isn't in 
+    # player_names = room_dict.values()
+    # if username not in player_names:
+    #     return False
 
     if 'player1' in room_dict and room_dict['player1'] == username:
-        target_user = 'player1'
+        room_dict.pop('player1')
     elif 'player2' in room_dict and room_dict['player2'] == username:
-        target_user = 'player2'
+        room_dict.pop('player2')
 
-    room_dict.pop(target_user)
     rooms[deck_id] = room_dict
 
+    # upload
     rooms = json.dumps(rooms)
     url = f"https://jsonblob.com/api/room/{blobId}"
     requests.put(url, data=rooms)
 
     return True
-    
-
 
 def remaining_in_deck(deck_id):
     get_deck = requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}").json()

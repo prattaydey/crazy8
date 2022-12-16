@@ -28,7 +28,10 @@ db.commit()
 @app.route("/", methods=['GET', 'POST'])
 def index():
     if 'username' in session:
+        print("user is logged in as " + session['username'] + " is already logged in. Redirecting to /main")
         return redirect("/main")
+
+    print("user is already logged in. Redirecting to /login")
     return redirect("/login")
 
 # REGISTER
@@ -36,6 +39,7 @@ def index():
 def register():
     # Already logged in
     if 'username' in session:
+        print("user is logged in as " + session['username'] + " is already logged in. Redirecting to /main")
         return redirect("/main")
     
     # GET
@@ -85,6 +89,7 @@ def register():
 def login():
     # Already logged in
     if 'username' in session:
+        print("user is logged in as " + session['username'] + " is already logged in. Redirecting to /main")
         return redirect("/main")
 
     # GET
@@ -135,6 +140,7 @@ def login():
 def logout():
     # remove the username from the session if it's there
     session.pop('username', None)
+    print("user has logged out. Redirecting to /login")
     return redirect("/login")
 
 # <------------------------------------- END OF LOGIN / REGISTER ------------------------------------->
@@ -148,60 +154,65 @@ def loadings():
 def main():
     if request.method == "POST" and 'room_name' in request.form:
         room_name = request.form['room_name']
-        print("room name: " + room_name)
         deck_id = create_deck()
         setup(deck_id)
         upload_deck_id(deck_id, room_name)
+        print("created room " + room_name + " with id " + deck_id)
 
     if 'username' in session:
         # returns a dictionary
-        rooms = get_all_rooms()
+        rooms = get_rooms()
         # tell the variable that it is a dictionary
         rooms = dict(rooms)
         # returns a list of deck ids
         ids = rooms.keys()
-        
+
         return render_template('main.html', room_names=rooms, ids=ids)
     else:
+        print("user is not logged in. Redirecting to /login")
         return redirect("/login")
 
 @app.route("/leave", methods=["POST"])
 def leave():
+    print("removing player from room")
     remove_player(request.form['deck_id'], session['username'])
+    print("Redirecting to /main")
     return redirect("/main")
         
 # starts up the room
 @app.route("/<deck_id>", methods=['POST'])
 def connect(deck_id):
     if not 'username' in session:
+        print("user is not logged in. Redirecting to /login")
         return redirect('/login')
 
-    room = get_room(deck_id)
+    room = get_rooms()[deck_id]
 
     # if the player trying to join the room has already entered the room previously, then let them in, but don't add their name again
     usernames = room.values()
     if session['username'] in usernames:
-        if 'player1' in room and room['username'] == session['username']:
+        if 'player1' in room and room['player1'] == session['username']:
             my_hand = get_pile(deck_id, "player1")
-            opponents_hand = get_pile_image_urls(deck_id, "player2")
-        elif 'player2' in room and room['username'] == session['username']:
+            opponents_hand = get_pile(deck_id, "player2")
+        elif 'player2' in room and room['player2'] == session['username']:
             my_hand = get_pile(deck_id, "player2")
-            opponents_hand = get_pile_image_urls(deck_id, "player1")
+            opponents_hand = get_pile(deck_id, "player1")
 
     # for players entering the room for the first time
     else:
+        add_player(deck_id, session['username'])
         if not 'player1' in room:
             my_hand = get_pile(deck_id, "player1")
-            opponents_hand = get_pile_image_urls(deck_id, "player2")
+            opponents_hand = get_pile(deck_id, "player2")
         elif not 'player2' in room:
             my_hand = get_pile(deck_id, "player2")
-            opponents_hand = get_pile_image_urls(deck_id, "player1")
+            opponents_hand = get_pile(deck_id, "player1")
         else:
             return "this room is full :(" 
 
-    starting_card = get_pile_image_urls(deck_id, "play")
+    card_in_play = get_pile(deck_id, "play")[0]
 
-    return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=starting_card, deck_id=deck_id, play="play", pile_id="player1")
+    return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=card_in_play, deck_id=deck_id, play="play", pile_id="player1")
 
 #playing the game
 @app.route("/play", methods=['POST'])
@@ -218,9 +229,9 @@ def crazy8():
     deckID = create_deck()
     # pileID = ret_pile_name()
     setup(deckID)
-    hand1 = get_pile_image_urls(deckID, "player1")
-    hand2 = get_pile_image_urls(deckID, "player2")
-    card_in_play = get_pile_image_urls(deckID, "play")
+    hand1 = get_pile(deckID, "player1")
+    hand2 = get_pile(deckID, "player2")
+    card_in_play = get_pile(deckID, "play")[0]
 
     # draw_from_pile(deckID, hand1)
 

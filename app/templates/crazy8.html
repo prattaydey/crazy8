@@ -31,9 +31,7 @@ Dec 2022 -->
       <!-- card in play -->
       <div class="grid-container">
         <div class="grid-x grid-padding-x align-center">
-          {% for card in card_in_play %} 
-            <img src="{{card}}" style="width: 10%;" name ="card_in_play">
-          {% endfor %} 
+          <img src="{{card_in_play['image']}}" style="width: 10%;" name ="card_in_play">
         </div>
       </div>
 

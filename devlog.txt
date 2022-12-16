@@ -127,6 +127,7 @@ kevinL -- 2022-12-15 21:31
 - added a way to add and remove player's usernames into the json file containing the players in each room
 - created leave() and then subsequently broke it while trying to let users who joined the room previously back in
 - added a screen that displays when the user tries to join a room that is full
+- added print statements
 - mildly made everything worse (for the better)
 
 ==============================================================
