@@ -138,16 +138,17 @@ def logout():
     return redirect("/login")
 
 # <------------------------------------- END OF LOGIN / REGISTER ------------------------------------->
-
+# renders the cool loading page 
 @app.route("/loadings", methods=['GET', 'POST'])
 def loadings():
     return render_template('loading.html')
 
-
+# the main page where we can make custom rooms and stuff!
 @app.route("/main", methods=['GET', 'POST'])
 def main():
     if request.method == "POST" and 'room_name' in request.form:
         room_name = request.form['room_name']
+        print("room name: " + room_name)
         deck_id = create_deck()
         setup(deck_id)
         upload_deck_id(deck_id, room_name)
@@ -164,25 +165,52 @@ def main():
     else:
         return redirect("/login")
 
-@app.route("/<deck_id>", methods=['GET', 'POST'])
+@app.route("/leave", methods=["POST"])
+def leave():
+    remove_player(request.form['deck_id'], session['username'])
+    return redirect("/main")
+        
+# starts up the room
+@app.route("/<deck_id>", methods=['POST'])
 def connect(deck_id):
     if not 'username' in session:
         return redirect('/login')
 
-    
     room = get_room(deck_id)
 
-    if not 'player1' in room:
-        my_hand = get_pile_image_urls(deck_id, "player1")
-        opponents_hand = get_pile_image_urls(deck_id, "player2")
-    elif not 'player2' in room:
-        my_hand = get_pile_image_urls(deck_id, "player2")
-        opponents_hand = get_pile_image_urls(deck_id, "player1")
+    # if the player trying to join the room has already entered the room previously, then let them in, but don't add their name again
+    usernames = room.values()
+    if session['username'] in usernames:
+        if 'player1' in room and room['username'] == session['username']:
+            my_hand = get_pile(deck_id, "player1")
+            opponents_hand = get_pile_image_urls(deck_id, "player2")
+        elif 'player2' in room and room['username'] == session['username']:
+            my_hand = get_pile(deck_id, "player2")
+            opponents_hand = get_pile_image_urls(deck_id, "player1")
+
+    # for players entering the room for the first time
     else:
-        return "this room is full :(" 
-        
+        if not 'player1' in room:
+            my_hand = get_pile(deck_id, "player1")
+            opponents_hand = get_pile_image_urls(deck_id, "player2")
+        elif not 'player2' in room:
+            my_hand = get_pile(deck_id, "player2")
+            opponents_hand = get_pile_image_urls(deck_id, "player1")
+        else:
+            return "this room is full :(" 
+
     starting_card = get_pile_image_urls(deck_id, "play")
+
     return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=starting_card, deck_id=deck_id, play="play", pile_id="player1")
+
+#playing the game
+@app.route("/play", methods=['POST'])
+def play(deck_id):
+    if request.method == "POST":
+        card_check(deck_id, 'current_card')
+        starting_card = 'current_card["image"]'
+
+    return render_template("crazy8.html", )
 
 # page with the game
 @app.route("/crazy8", methods=['GET', 'POST'])

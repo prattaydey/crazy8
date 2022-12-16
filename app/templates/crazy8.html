@@ -11,10 +11,11 @@ Dec 2022 -->
     </head>
 
     <body>
-      <form action="/main">
+      <form action="/leave" method="POST">
         <button class="button"> 
             Return to main page 
         </button>
+        <input type="hidden" value="{{deck_id}}" name="deck_id">
       </form>
       <!-- opponents's hand  -->
       <div class="grid-container">
@@ -31,26 +32,13 @@ Dec 2022 -->
       <div class="grid-container">
         <div class="grid-x grid-padding-x align-center">
           {% for card in card_in_play %} 
-            <img src="{{card}}" style="width: 10%;">
+            <img src="{{card}}" style="width: 10%;" name ="card_in_play">
           {% endfor %} 
         </div>
       </div>
 
-      <!-- pick up pile -->
-      <div class="grid-container">
-        <div class="grid-x grid-padding-x">
-          <div class="card" style="width: 120px; background: rgba(186, 186, 186, 0);">
-            <div class="card-divider" style="background: rgba(186, 186, 186, 0);">
-              <div class="clear secondary button small center" action="get_pile_image_urls({{deck_id}}, {{play}})"> 
-                Pick up
-              </div>   
-            </div>     
-            <div class="card-section">
-              <img src="{{card}}" style="width: 10%;">
-            </div>
-          </div>
-        </div>
-      </div>
+      <!-- pile to pick cards from -->
+
 
       <br>
       <br>
@@ -60,12 +48,15 @@ Dec 2022 -->
           {% for card in my_hand %}
           <div class="card" style="width: 120px; background: rgba(186, 186, 186, 0);">
             <div class="card-divider" style="background: rgba(186, 186, 186, 0);">
-              <div class="clear secondary button small center" action="draw_from_pile({{deck_id}}, {{plie_id}})"> 
-                Select
-              </div>   
-            </div>     
+              <form action="/play"> 
+                <button class="clear secondary button small center"> 
+                  Select
+                </button> 
+                <input type="hidden" id="value_of_card" name="current_card" value="{{card['code']}}">
+              </form>  
+            </div>   
             <div class="card-section">
-              <img src="{{card}}" style="width: 120px;" center>
+              <img src="{{card['image']}}" style="width: 120px;" center>
             </div>
           </div>
           {% endfor %}

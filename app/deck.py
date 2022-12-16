@@ -39,6 +39,10 @@ def setup(deck_id):
     requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/pile/player2/add/?cards={hand2}")
     requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/pile/play/add/?cards={starting_card}")
 
+def get_pile(deck_id, pile_name):
+    pile = requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/pile/{pile_name}/list").json()['piles'][pile_name]['cards']
+    return pile
+
 def get_pile_codes(deck_id, pile_name):
     pile = requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/pile/{pile_name}/list").json()['piles'][pile_name]['cards']
     pile_codes = []
@@ -71,13 +75,13 @@ def get_all_rooms():
     url = f"https://jsonblob.com/api/room/{blobId}"
     request = requests.get(url)
     rooms = json.loads(request.content)
-    return rooms
+    return dict(rooms)
 
 def get_room(deck_id):
     url = f"https://jsonblob.com/api/room/{blobId}"
     request = requests.get(url)
     rooms = json.loads(request.content)
-    return rooms[deck_id]
+    return dict(rooms[deck_id])
 
 # helper function -- draws card from the hand that has it, adds to pile in play
 def play_card(deck_id, card_code):
@@ -91,8 +95,13 @@ def card_check(deck_id, player_card):
         return play_card(deck_id, card_code)
     return False
 
+# 
+
+# does what it says 
 def add_player(deck_id, username):
-    room_dict = get_room(deck_id)
+    rooms = get_all_rooms()
+    room_dict = dict(rooms[deck_id])
+
     if not 'player1' in room_dict:
         room_dict.update({"player1" : username})
     elif not 'player2' in room_dict:
@@ -100,10 +109,36 @@ def add_player(deck_id, username):
     else:
         return False
 
+    rooms[deck_id] = room_dict
+
+    rooms = json.dumps(rooms)
+    print(rooms)
+    url = f"https://jsonblob.com/api/room/{blobId}"
+    requests.put(url, data=rooms)
+
     return True
 
-def remove_player(deck_id):
-    return 1
+def remove_player(deck_id, username):
+    rooms = get_all_rooms()
+    room_dict = dict(rooms[deck_id])
+
+    player_names = room_dict.values()
+    if username not in player_names:
+        return False
+
+    if 'player1' in room_dict and room_dict['player1'] == username:
+        target_user = 'player1'
+    elif 'player2' in room_dict and room_dict['player2'] == username:
+        target_user = 'player2'
+
+    room_dict.pop(target_user)
+    rooms[deck_id] = room_dict
+
+    rooms = json.dumps(rooms)
+    url = f"https://jsonblob.com/api/room/{blobId}"
+    requests.put(url, data=rooms)
+
+    return True
     
 
 
@@ -111,7 +146,7 @@ def remaining_in_deck(deck_id):
     get_deck = requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}").json()
 
 
-
+print("https://jsonblob.com/api/room/1051631725620510720")
 # deck_id = create_deck()
 # setup(deck_id)
 # print("deck_id: " + deck_id)

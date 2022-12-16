@@ -105,13 +105,13 @@ Dec 2022 -->
                       deck_id: {{id}}
                   </div>
 
-                  <a href="/{{id}}">
+                  <form action="/{{id}}" method="POST">
                     <div class="text-center">
                         <button class="button">
                           Join
                         </button>
                     </div>
-                  </a>
+                </form>
               </div>
             </div>
             {% endfor %}
