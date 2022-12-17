@@ -52,11 +52,11 @@ Dec 2022 -->
           {% for card in my_hand %}
           <div class="card" style="width: 120px; background: rgba(186, 186, 186, 0);">
             <div class="card-divider" style="background: rgba(186, 186, 186, 0);">
-              <form action="/play"> 
+              <form action="/{{deck_id}}/play" method="POST"> 
                 <button class="clear secondary button small center"> 
                   Select
                 </button> 
-                <input type="hidden" id="value_of_card" name="current_card" value="{{card['code']}}">
+                <input type="hidden" id="value_of_card" name="current_card" value="{{card}}">
               </form>  
             </div>   
             <div class="card-section">

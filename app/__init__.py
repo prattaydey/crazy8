@@ -230,14 +230,27 @@ def connect(deck_id):
 @app.route("/<deck_id>/play", methods=['POST'])
 def play(deck_id):
     if request.method == "POST":
-        card_check(deck_id, 'current_card')
-        #current card is the card you're putting down, card_in_play is the card in the center
-        add_to_pile("play", deck_id, 'current_card[id]')
-        card_in_play = get_pile(deck_id, "play")
-        my_hand = get_pile(deck_id, "player1")
-        opponents_hand = get_pile(deck_id, "player2")
+        # current card is a dictionary but its type is a string
+        current_card = request.form["current_card"]
+        print("current card: " + current_card)
 
-    return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=card_in_play, deck_id=deck_id) #redirect('/connect-<deck_id>', code=307)
+        # so we need to convert it to a dictionary
+        # the problem is, json.loads() requires things to be enclosed in double quotes
+        # current_card has all its values enclosed in single quotes
+        # so first we have to run this
+        current_card = current_card.replace("'", '"')
+        # then load it into a dictionary
+        current_card = json.loads(current_card)
+
+        card_check(deck_id, current_card)
+
+        #current card is the card you're putting down, card_in_play is the card in the center
+        # add_to_pile("play", deck_id, 'current_card[id]')
+        # card_in_play = get_pile(deck_id, "play")
+        # my_hand = get_pile(deck_id, "player1")
+        # opponents_hand = get_pile(deck_id, "player2")
+    return redirect(f"/connect-{deck_id}")
+    #return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=card_in_play, deck_id=deck_id) #redirect('/connect-<deck_id>', code=307)
 
 # page with the game
 # No idea what to do with this
