@@ -187,7 +187,7 @@ def leave():
     return redirect("/main")
         
 # starts up the room
-@app.route("/<deck_id>", methods=['GET', 'POST'])
+@app.route("/connect-<deck_id>", methods=['GET', 'POST'])
 def connect(deck_id):
     if not 'username' in session:
         print("user is not logged in. Redirecting to /login")
@@ -237,7 +237,7 @@ def play(deck_id):
         my_hand = get_pile(deck_id, "player1")
         opponents_hand = get_pile(deck_id, "player2")
 
-    return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=card_in_play, deck_id=deck_id) #redirect('/<deck_id>', code=307)
+    return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=card_in_play, deck_id=deck_id) #redirect('/connect-<deck_id>', code=307)
 
 # page with the game
 # No idea what to do with this

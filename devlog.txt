@@ -136,4 +136,8 @@ josephW -- 2022-12-16 21:53
 prattayD -- 2022-12-16 21:58
 - re-evaluated old functions to serve new uses
 - Debugging
+
+kevinL -- 2022-12-17 13:13
+- suppressed an error regarding favicon.ico
+- changed the route for connect() to /connect-<id>
 ==============================================================
