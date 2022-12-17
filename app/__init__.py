@@ -218,20 +218,29 @@ def connect(deck_id):
             return "this room is full :(" 
 
     card_in_play = get_pile(deck_id, "play")[0]
+    cards_remaining = remaining_in_deck(deck_id)
 
-    return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=card_in_play, deck_id=deck_id)
+    return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=card_in_play, deck_id=deck_id, cards_remaining=cards_remaining)
 
 #playing the game
-@app.route("/play", methods=['POST'])
+#Potential use of this, we can get the list of rooms, run through them
+#The first room with an empty spot, the player will join
+#parameters = list of rooms
+#goal: player will join random room with empty spot. If none available, go to waiting list
+@app.route("/<deck_id>/play", methods=['POST'])
 def play(deck_id):
     if request.method == "POST":
         card_check(deck_id, 'current_card')
         #current card is the card you're putting down, card_in_play is the card in the center
         add_to_pile("play", deck_id, 'current_card[id]')
+        card_in_play = get_pile(deck_id, "play")
+        my_hand = get_pile(deck_id, "player1")
+        opponents_hand = get_pile(deck_id, "player2")
 
-    return redirect('/<deck_id>', code=307)
+    return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=card_in_play, deck_id=deck_id) #redirect('/<deck_id>', code=307)
 
 # page with the game
+# No idea what to do with this
 @app.route("/crazy8", methods=['GET', 'POST'])
 def crazy8():
     deckID = create_deck()

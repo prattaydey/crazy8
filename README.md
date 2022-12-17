@@ -1,6 +1,7 @@
 # p1_AdorableMachoElephants
 ## to-do:
 - make a way to interact with cards
+    - make a way to add cards to game pile, draw cards from deck on screen
 - make a way to create rooms (done)
 - display opponent's hand face down
 - incorporate count api for stats

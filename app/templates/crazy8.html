@@ -30,6 +30,12 @@ Dec 2022 -->
       <br>
       <!-- card in play -->
       <div class="grid-container">
+        <div class="grid-x grid-padding-x align-left">
+          <div style="position: relative; width: 100%">
+            <img src="/static/playing_card.png" style="width: 10%;" name ="deck_pile">
+            <h1 style="bottom: 50%;"> {{cards_remaining}} </h1>
+          </div>
+        </div>
         <div class="grid-x grid-padding-x align-center">
           <img src="{{card_in_play['image']}}" style="width: 10%;" name ="card_in_play">
         </div>
