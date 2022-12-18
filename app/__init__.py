@@ -161,10 +161,23 @@ def main():
         print("created room " + room_name + " with id " + deck_id)
 
         #create a counter
-        r = requests.get(f"https://api.countapi.xyz/create?namespace={deck_id}").json()
-        response = json.loads(r)
-        counter_key = response['key']
-        print("created a counter at" + f"https://api.countapi.xyz/get/{deck_id}")
+        requests.get(f"https://api.countapi.xyz/{deck_id}").json()
+        requests.get(f"https://api.countapi.xyz/set/{deck_id}?value=0")
+        print("created a counter at " + f"https://api.countapi.xyz/get/{deck_id}")
+
+        # get a dictionary of all the rooms
+        rooms = get_rooms()
+        # tell the dictionary that it's a dictionary
+        room_dict = dict(rooms[deck_id])
+        # add the counter url
+        room_dict.update( {"counter" : f"https://api.countapi.xyz/{deck_id}"})
+        # replace the current definition for deck_id with the modified one
+        rooms[deck_id] = room_dict
+
+        # upload the data
+        rooms = json.dumps(rooms)
+        url = f"https://jsonblob.com/api/room/{blobId}"
+        requests.put(url, data=rooms)
 
     if 'username' in session:
         # returns a dictionary
@@ -181,6 +194,9 @@ def main():
 
 @app.route("/leave", methods=["POST"])
 def leave():
+    if not 'username' in session:
+        print("user is not logged in. Redirecting to /login")
+        return redirect("/login")
     print("removing player from room")
     remove_player(request.form['deck_id'], session['username'])
     print("Redirecting to /main")
@@ -228,6 +244,22 @@ def connect(deck_id):
     else:
         error_message = ""
     return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=current_card, deck_id=deck_id, cards_remaining=cards_remaining, error_message=error_message)
+    
+@app.route("/draw-<deck_id>", methods=["GET"])
+def draw(deck_id):
+    if 'username' not in session:
+        return redirect("/login")
+
+    room = get_rooms()[deck_id]
+    usernames = room.values()
+    if session['username'] in usernames:
+        if 'player1' in room and room['player1'] == session['username']:
+            me = "player1"
+        elif 'player2' in room and room['player2'] == session['username']:
+            me = "player2"
+        card_drawn = draw_from_deck(deck_id)['code']
+        add_to_pile(me, deck_id, card_drawn)
+    return redirect(f"/connect-{deck_id}")
 
 #playing the game
 #Potential use of this, we can get the list of rooms, run through them
@@ -252,13 +284,24 @@ def play(deck_id):
         if not card_check(deck_id, current_card):
             session['error'] = "You cannot play that card"
 
-        #current card is the card you're putting down, card_in_play is the card in the center
-        # add_to_pile("play", deck_id, 'current_card[id]')
-        # card_in_play = get_pile(deck_id, "play")
-        # my_hand = get_pile(deck_id, "player1")
-        # opponents_hand = get_pile(deck_id, "player2")
     return redirect(f"/connect-{deck_id}")
     #return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=card_in_play, deck_id=deck_id) #redirect('/connect-<deck_id>', code=307)
+
+#To be used after Player presses play button and there are no avalible rooms
+@app.route("/waiting", methods=['POST'])
+def waiting():
+    room_list = get_rooms()
+    for id in room_list:
+        deck_id = id #deck_id now equal to the deck id of one of the rooms
+        room = room_list[deck_id] #room now equal to dictionary containing player one and player two
+        
+        # If there is an empty slot, redirect to connect to that room
+        if (not 'player1' in room) or (not 'player2' in room):
+            return redirect(f"/connect-{deck_id}")
+
+    # get sent to the waiting room
+    return render_template("loading.html")
+
 
 # page with the game
 # No idea what to do with this

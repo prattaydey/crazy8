@@ -27,29 +27,16 @@ Dec 2022 -->
       </div>
 
       <br>
-      <br>
-      <!-- card in play and deck -->
-      <!-- <div class="grid-container">
-        <div class="grid-x grid-padding-x align-left">
-          <div style="position: relative; width: 100%">
-            <img src="/static/playing_card.png" style="width: 10%;" name ="deck_pile">
-            <h1 style="bottom: 50%;"> {{cards_remaining}} </h1>
-          </div>
-        </div>
-        <div class="grid-x grid-padding-x align-center">
-          <img src="{{card_in_play['image']}}" style="width: 10%;" name ="card_in_play">
-        </div>
-      </div> -->
+
       <div class="grid-container">
         <div class="grid-x">
             <div class="cell" style="width: 10%;">
+              <a class="thumbnail" href="/draw-{{deck_id}}" style="margin: 0;">
                 <img src="/static/playing_card.png">
-                <div style="position: relative; text-align: center; bottom: 45%;">
-                    <h3>{{cards_remaining}}</h3>
-                </div>
+              </a>
             </div>
-            <div class="cell" style="width: 10%; margin-left: 35%; margin-right: 45%;">
-                <img src="{{card_in_play['image']}}" name ="card_in_play">
+            <div class="cell" style="width: 20%; margin-left: 30%; margin-right: 40%;">
+                <img src="{{card_in_play['image']}}" name ="card_in_play" style="padding-left: 25%; padding-right: 25%;">
                 <div style="position: relative; text-align: center; top: 5%; color: brown;">
                     {{error_message}}
                 </div>>
@@ -71,9 +58,6 @@ Dec 2022 -->
               </form>  
             </div>   
             <img src="{{card['image']}}" style="width: 120px;">
-            <!-- <div class="card-section">
-              <img src="{{card['image']}}" style="width: 120px;" center>
-            </div> -->
           </div>
           {% endfor %}
         </div>

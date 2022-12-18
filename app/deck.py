@@ -69,8 +69,9 @@ def play_card(deck_id, card_code):
 
 # checks to see if card is valid to deal
 def card_check(deck_id, player_card):
-    top_card = requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/pile/play/list").json()['piles']['play']['cards'][0]
-    if player_card['suit'] == top_card['suit'] or player_card['value'] == top_card['value']:
+    top_card = requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/pile/play/list").json()['piles']['play']['cards']
+    top_card = top_card[len(top_card) - 1]
+    if player_card['suit'] == top_card['suit'] or player_card['code'][0] == top_card['code'][0]:
         card_code = player_card['code']
         play_card(deck_id, card_code)
         return True

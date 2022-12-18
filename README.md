@@ -8,7 +8,7 @@
 - establish a turn order
 - make a way to ensure they dont try to put down the wrong card (ie 2D on 5H)
 - a way to determine win/lose and update stats accordingly
-    - if the pile rusns out of cards, you win 
+    - if the pile runs out of cards, you win 
 - Extra stuff
     * Powerups
     * chat system

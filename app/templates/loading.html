@@ -12,11 +12,62 @@
 
   </header>
 
-  <!-- <div class="callout">
-    LOADING
-  </div> -->
+  <!-- THIS IS THE PLAN
+  get rooms from the api
+  Then check if the is an empty spot
+  Then if empty reload page
+  Else check again -->
+
+  <!-- Implement these codes
+
+  async function getDataFromAPI() {
+
+    const form = document.getElementById('myForm');
+
+    const response = await fetch('https://jsonblob.com/api/room/{blobId}');
+    const data = await response.json();
+    // The data variable contains the dictionary you want to iterate through
+    const keys = Object.keys(data);
+    for (let i = 0; i < keys.length; i++) {
+      const Deck_id = keys[i];
+      const room = data[Deck_id];
+
+      const room_key = Object.keys(room)
+      if (!('key1' in dictionary) || !('key4' in dictionary)){
+        form.addEventListener('submit', function(event) {
+
+        event.preventDefault();  // Prevent the form from being submitted the usual way
+
+        const formData = new FormData(form);  // Get the form data
+
+        const xhr = new XMLHttpRequest();  // Create a new XHR object
+        xhr.open('POST', form.action);  // Set the request method and URL
+        xhr.send(formData);  // Send the request with the form data
+        });
+      }
+    }
+  }
+
+  -->
 
   <body onload="redirect()"> 
+
+    <form id="myForm" action="/submit.php">
+      <input type="text" name="name" value="John">
+      <input type="text" name="email" value="john@example.com">
+      <input type="button" value="Submit" onclick="submitForm()">
+    </form>
+    
+    <script>
+      function submitForm() {
+        // Get the form element
+        var form = document.getElementById("myForm");
+    
+        // Submit the form
+        form.submit();
+      }
+    </script>
+    
 
     <div>
       <canvas id='canvas'></canvas>
