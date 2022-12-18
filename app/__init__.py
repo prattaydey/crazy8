@@ -217,10 +217,17 @@ def connect(deck_id):
         else:
             return "this room is full :(" 
 
-    card_in_play = get_pile(deck_id, "play")[0]
+    cards_in_play = get_pile(deck_id, "play")
+    current_card = cards_in_play[len(cards_in_play) - 1]
+
     cards_remaining = remaining_in_deck(deck_id)
 
-    return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=card_in_play, deck_id=deck_id, cards_remaining=cards_remaining)
+    if 'error' in session:
+        error_message = session['error']
+        session.pop('error')
+    else:
+        error_message = ""
+    return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=current_card, deck_id=deck_id, cards_remaining=cards_remaining, error_message=error_message)
 
 #playing the game
 #Potential use of this, we can get the list of rooms, run through them
@@ -242,7 +249,8 @@ def play(deck_id):
         # then load it into a dictionary
         current_card = json.loads(current_card)
 
-        card_check(deck_id, current_card)
+        if not card_check(deck_id, current_card):
+            session['error'] = "You cannot play that card"
 
         #current card is the card you're putting down, card_in_play is the card in the center
         # add_to_pile("play", deck_id, 'current_card[id]')
@@ -261,8 +269,7 @@ def crazy8():
     setup(deckID)
     hand1 = get_pile(deckID, "player1")
     hand2 = get_pile(deckID, "player2")
-    card_in_play = get_pile(deckID, "play")[0]
-
+    card_in_play = get_pile(deckID, "play")[len(card_in_play)-1]
     # draw_from_pile(deckID, hand1)
 
     return render_template('crazy8.html', opponents_hand=hand1, my_hand=hand2, card_in_play=card_in_play)

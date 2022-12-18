@@ -72,7 +72,8 @@ def card_check(deck_id, player_card):
     top_card = requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/pile/play/list").json()['piles']['play']['cards'][0]
     if player_card['suit'] == top_card['suit'] or player_card['value'] == top_card['value']:
         card_code = player_card['code']
-        return play_card(deck_id, card_code)
+        play_card(deck_id, card_code)
+        return True
     return False
 
 # adds a card to a pile 

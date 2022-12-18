@@ -28,8 +28,8 @@ Dec 2022 -->
 
       <br>
       <br>
-      <!-- card in play -->
-      <div class="grid-container">
+      <!-- card in play and deck -->
+      <!-- <div class="grid-container">
         <div class="grid-x grid-padding-x align-left">
           <div style="position: relative; width: 100%">
             <img src="/static/playing_card.png" style="width: 10%;" name ="deck_pile">
@@ -39,29 +39,41 @@ Dec 2022 -->
         <div class="grid-x grid-padding-x align-center">
           <img src="{{card_in_play['image']}}" style="width: 10%;" name ="card_in_play">
         </div>
+      </div> -->
+      <div class="grid-container">
+        <div class="grid-x">
+            <div class="cell" style="width: 10%;">
+                <img src="/static/playing_card.png">
+                <div style="position: relative; text-align: center; bottom: 45%;">
+                    <h3>{{cards_remaining}}</h3>
+                </div>
+            </div>
+            <div class="cell" style="width: 10%; margin-left: 35%; margin-right: 45%;">
+                <img src="{{card_in_play['image']}}" name ="card_in_play">
+                <div style="position: relative; text-align: center; top: 5%; color: brown;">
+                    {{error_message}}
+                </div>>
+            </div>
+        </div>
       </div>
 
-      <!-- pile to pick cards from -->
-
-
-      <br>
-      <br>
       <!-- player's cards -->
       <div class="grid-container">
-        <div class="grid-x grid-margin-x small-up-2 small-up-2">
+        <div class="grid-x grid-margin-x align-center">
           {% for card in my_hand %}
           <div class="card" style="width: 120px; background: rgba(186, 186, 186, 0);">
-            <div class="card-divider" style="background: rgba(186, 186, 186, 0);">
+            <div class="card-divider" style="background: rgba(186, 186, 186, 0); margin-right: 0%;">
               <form action="/{{deck_id}}/play" method="POST"> 
-                <button class="clear secondary button small center"> 
+                <button class="clear secondary button small center" style="margin-bottom: 0px;"> 
                   Select
                 </button> 
                 <input type="hidden" id="value_of_card" name="current_card" value="{{card}}">
               </form>  
             </div>   
-            <div class="card-section">
+            <img src="{{card['image']}}" style="width: 120px;">
+            <!-- <div class="card-section">
               <img src="{{card['image']}}" style="width: 120px;" center>
-            </div>
+            </div> -->
           </div>
           {% endfor %}
         </div>
