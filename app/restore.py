@@ -13,6 +13,22 @@ def restore():
     data = json.dumps(data)
     url = f"https://jsonblob.com/api/room/{blobId}"
     requests.put(url, data=data)
+
+    # for testing the win screen
+    deck_id = create_deck()
+    hand1 = ""
+    hand2 = ""
+    cards = requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/draw/?count=2").json()['cards']
+    hand1 += cards[0]['code']
+    hand2 += cards[1]['code']
+    starting_card = draw_from_deck(deck_id)['code']
+    requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/pile/player1/add/?cards={hand1}")
+    requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/pile/player2/add/?cards={hand2}")
+    requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/pile/play/add/?cards={starting_card}")
+
+    url = f"https://jsonblob.com/api/room/{blobId}"
+    upload_deck_id(deck_id, "Insta win")
+
     print(url)
 
 restore()

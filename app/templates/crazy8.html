@@ -30,11 +30,13 @@ Dec 2022 -->
 
       <div class="grid-container">
         <div class="grid-x">
+          <!-- deck cards are drawn from -->
             <div class="cell" style="width: 10%;">
               <a class="thumbnail" href="/draw-{{deck_id}}" style="margin: 0;">
                 <img src="/static/playing_card.png">
               </a>
             </div>
+            <!-- card in play -->
             <div class="cell" style="width: 20%; margin-left: 30%; margin-right: 40%;">
                 <img src="{{card_in_play['image']}}" name ="card_in_play" style="padding-left: 25%; padding-right: 25%;">
                 <div style="position: relative; text-align: center; top: 5%; color: brown;">

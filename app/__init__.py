@@ -20,8 +20,8 @@ DB_FILE="tables.db"
 db = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
 c = db.cursor()               #facilitate db ops -- you will use cursor to trigger db events
 
-c.execute("create table if not exists accounts(username text, password text);")
-c.execute("create table if not exists stats(id int, won int, lost int);")
+c.execute("create table if not exists accounts(id INT username TEXT, password TEXT);")
+c.execute("create table if not exists stats(id INT, won INT, lost INT);")
 db.commit()
 
 
@@ -159,26 +159,7 @@ def main():
         deck_id = create_deck()
         setup(deck_id)
         upload_deck_id(deck_id, room_name)
-        print("created room " + room_name + " with id " + deck_id)
-
-        #create a counter
-        requests.get(f"https://api.countapi.xyz/{deck_id}").json()
-        requests.get(f"https://api.countapi.xyz/hit/{deck_id}")
-        print("created a counter at " + f"https://api.countapi.xyz/get/{deck_id}")
-
-        # get a dictionary of all the rooms
-        rooms = get_rooms()
-        # tell the dictionary that it's a dictionary
-        room_dict = dict(rooms[deck_id])
-        # add the counter url
-        room_dict.update( {"counter" : f"https://api.countapi.xyz/{deck_id}"})
-        # replace the current definition for deck_id with the modified one
-        rooms[deck_id] = room_dict
-
-        # upload the data
-        rooms = json.dumps(rooms)
-        url = f"https://jsonblob.com/api/room/{blobId}"
-        requests.put(url, data=rooms)
+        print("created room " + room_name + " with id " + deck_id + " and a counter at " + f"https://api.countapi.xyz/get/{deck_id}")
 
     if 'username' in session:
         # returns a dictionary
@@ -251,18 +232,19 @@ def connect(deck_id):
     # count api for win/lose
     #winning and losing
     if len(my_hand) == 0:
-        #count api stuff
-        c.execute("UPDATE stats SET won=? WHERE id=?", )
+        c.execute("UPDATE stats SET won = +1 WHERE id=?", session['id'])
+        c.execute("UPDATE stats SET lost = +1 WHERE id=?", session['id'] )
         msg = "Congrats, you win!"
     elif len(opponents_hand) == 0:
-        #count api stuff
-        c.execute("UPDATE stats SET won=? WHERE id=?", )
+        c.execute("UPDATE stats SET won = +1 WHERE id=?", session['id'])
+        c.execute("UPDATE stats SET lost = +1 WHERE id=?", session['id'])
         msg = "Aw shucks, you loose"
     elif cards_remaining == 0:
         reshuffle_deck(deck_id)
 
     return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=current_card, deck_id=deck_id, cards_remaining=cards_remaining, error_message=error_message, msg=msg)
-    
+
+# draws from deck, uses up a turn    
 @app.route("/draw-<deck_id>", methods=["GET"])
 def draw(deck_id):
     if 'username' not in session:
@@ -318,9 +300,9 @@ def play(deck_id):
             increment_counter(deck_id)
 
     return redirect(f"/connect-{deck_id}")
-    #return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=card_in_play, deck_id=deck_id) #redirect('/connect-<deck_id>', code=307)
 
-#To be used after Player presses play button and there are no avalible rooms
+
+#To be used after Player presses play button and there are no available rooms
 @app.route("/waiting", methods=['POST'])
 def waiting():
     room_list = get_rooms()

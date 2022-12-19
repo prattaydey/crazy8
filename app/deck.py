@@ -60,9 +60,14 @@ def upload_deck_id(deck_id, room_name):
     existing_ids = dict(existing_ids)
     #print(existing_ids['test'])
 
-    existing_ids.update({deck_id : {"room_name" : room_name}})
+    # create a counter
+    requests.get(f"https://api.countapi.xyz/{deck_id}").json()
+    requests.get(f"https://api.countapi.xyz/hit/{deck_id}")
+
+    # update existing data
+    existing_ids.update({deck_id : {"room_name" : room_name, "counter" : f"https://api.countapi.xyz/{deck_id}"}})
     data = json.dumps(existing_ids)
-    
+
     requests.put(url, data=data)
     return url
 
