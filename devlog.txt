@@ -146,4 +146,16 @@ kevinL -- 2022-12-18 11:50
 - added error messages for playing invalid cards
 - updated crazy8.html to display the most recently played card in the middle
 - you can now play cards
+
+kevinL -- 2022-12-18 19:54
+- added countAPI to track who gets to go
+- added the ability for players to draw cards on their turn instead of playing a card 
+
+prattayD -- 2022-12-18 19:54
+- worked on function to reshuffle and move play pile back into deck when deck is empty.
+
+anjiniK -- 2022-12-18 19:54
+- created new database for stats page 
+- started implementing win/lose/reshuffle things into init.py
+- cleaned up the main page 
 ==============================================================

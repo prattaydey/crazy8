@@ -20,6 +20,15 @@ def shuffle_deck(deck_id):
 def draw_from_deck(deck_id):
     return requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/draw").json()['cards'][0]
 
+def reshuffle_deck(deck_id):
+    play_pile = get_pile(deck_id, "play")
+    card_in_play = play_pile[len(card_in_play) - 1]['code']
+
+    return_pile = requests.get(f"https://www.deckofcardsapi.com/api/deck/{deck_id}/pile/play/return/")
+    add_to_pile("play", deck_id, card_in_play)
+    shuffle_deck()
+    
+
 def draw_from_pile(deck_id, pile_name):
     return requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/pile/{pile_name}/draw").json()['cards'][0]
 
@@ -62,6 +71,23 @@ def get_rooms():
     request = requests.get(url)
     rooms = json.loads(request.content)
     return dict(rooms)
+
+def get_counter_value(deck_id):
+    print(requests.get(f"https://api.countapi.xyz/get/{deck_id}").json())
+    return requests.get(f"https://api.countapi.xyz/get/{deck_id}").json()['value']
+
+def increment_counter(deck_id):
+    print(requests.get(f"https://api.countapi.xyz/get/{deck_id}").json())
+    return requests.get(f"https://api.countapi.xyz/hit/{deck_id}").json()['value']
+
+def which_player(deck_id, session):
+    room = get_rooms()[deck_id]
+    usernames = room.values()
+    if session['username'] in usernames:
+        if 'player1' in room and room['player1'] == session['username']:
+            return "player1"
+        elif 'player2' in room and room['player2'] == session['username']:
+            return "player2"
 
 # helper function -- draws card from the hand that has it, adds to pile in play
 def play_card(deck_id, card_code):

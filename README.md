@@ -1,12 +1,17 @@
 # p1_AdorableMachoElephants
 ## to-do:
-- make a way to interact with cards
+IMPORTANT:
+- auto-reload whenever a user performs an action
+- display a proper winning/losing screen
+- incorporate count api for stats
+
+FINISHED:
+- make a way to interact with cards (done)
     - make a way to add cards to game pile, draw cards from deck on screen
 - make a way to create rooms (done)
-- display opponent's hand face down
-- incorporate count api for stats
-- establish a turn order
-- make a way to ensure they dont try to put down the wrong card (ie 2D on 5H)
+- display opponent's hand face down (done)
+- establish a turn order (done)
+- make a way to ensure they dont try to put down the wrong card (ie 2D on 5H) (done)
 - a way to determine win/lose and update stats accordingly
     - if the pile runs out of cards, you win 
 - Extra stuff

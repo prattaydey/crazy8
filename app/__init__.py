@@ -21,6 +21,7 @@ db = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, oth
 c = db.cursor()               #facilitate db ops -- you will use cursor to trigger db events
 
 c.execute("create table if not exists accounts(username text, password text);")
+c.execute("create table if not exists stats(id int, won int, lost int);")
 db.commit()
 
 
@@ -28,10 +29,10 @@ db.commit()
 @app.route("/", methods=['GET', 'POST'])
 def index():
     if 'username' in session:
-        print("user is logged in as " + session['username'] + " is already logged in. Redirecting to /main")
+        print("user is logged in as " + session['username'] + ". Redirecting to /main")
         return redirect("/main")
 
-    print("user is already logged in. Redirecting to /login")
+    print("user is not logged in. Redirecting to /login")
     return redirect("/login")
 
 # REGISTER
@@ -162,7 +163,7 @@ def main():
 
         #create a counter
         requests.get(f"https://api.countapi.xyz/{deck_id}").json()
-        requests.get(f"https://api.countapi.xyz/set/{deck_id}?value=0")
+        requests.get(f"https://api.countapi.xyz/hit/{deck_id}")
         print("created a counter at " + f"https://api.countapi.xyz/get/{deck_id}")
 
         # get a dictionary of all the rooms
@@ -191,7 +192,8 @@ def main():
     else:
         print("user is not logged in. Redirecting to /login")
         return redirect("/login")
-
+        
+#how to remove a player from the room
 @app.route("/leave", methods=["POST"])
 def leave():
     if not 'username' in session:
@@ -243,22 +245,44 @@ def connect(deck_id):
         session.pop('error')
     else:
         error_message = ""
-    return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=current_card, deck_id=deck_id, cards_remaining=cards_remaining, error_message=error_message)
+
+    msg = ""
+
+    # count api for win/lose
+    #winning and losing
+    if len(my_hand) == 0:
+        #count api stuff
+        c.execute("UPDATE stats SET won=? WHERE id=?", )
+        msg = "Congrats, you win!"
+    elif len(opponents_hand) == 0:
+        #count api stuff
+        c.execute("UPDATE stats SET won=? WHERE id=?", )
+        msg = "Aw shucks, you loose"
+    elif cards_remaining == 0:
+        reshuffle_deck(deck_id)
+
+    return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=current_card, deck_id=deck_id, cards_remaining=cards_remaining, error_message=error_message, msg=msg)
     
 @app.route("/draw-<deck_id>", methods=["GET"])
 def draw(deck_id):
     if 'username' not in session:
         return redirect("/login")
 
-    room = get_rooms()[deck_id]
-    usernames = room.values()
-    if session['username'] in usernames:
-        if 'player1' in room and room['player1'] == session['username']:
-            me = "player1"
-        elif 'player2' in room and room['player2'] == session['username']:
-            me = "player2"
-        card_drawn = draw_from_deck(deck_id)['code']
-        add_to_pile(me, deck_id, card_drawn)
+    if which_player(deck_id, session) == "player1":
+        # player 1 goes on odd values
+        if get_counter_value(deck_id) % 2 == 0:
+            session['error'] = "It is not your turn"
+            return redirect(f"/connect-{deck_id}")
+    elif which_player(deck_id, session) == "player2":
+        # player 2 goes on even values
+        if get_counter_value(deck_id) % 2 == 1:
+            session['error'] = "It is not your turn"
+            return redirect(f"/connect-{deck_id}")
+
+    me = which_player(deck_id, session)
+    card_drawn = draw_from_deck(deck_id)['code']
+    add_to_pile(me, deck_id, card_drawn)
+    increment_counter(deck_id)
     return redirect(f"/connect-{deck_id}")
 
 #playing the game
@@ -269,20 +293,29 @@ def draw(deck_id):
 @app.route("/<deck_id>/play", methods=['POST'])
 def play(deck_id):
     if request.method == "POST":
+        if which_player(deck_id, session) == "player1":
+            # player 1 goes on odd values
+            if get_counter_value(deck_id) % 2 == 0:
+                session['error'] = "It is not your turn"
+                return redirect(f"/connect-{deck_id}")
+        elif which_player(deck_id, session) == "player2":
+            # player 2 goes on even values
+            if get_counter_value(deck_id) % 2 == 1:
+                session['error'] = "It is not your turn"
+                return redirect(f"/connect-{deck_id}")
+
         # current card is a dictionary but its type is a string
         current_card = request.form["current_card"]
         print("current card: " + current_card)
 
-        # so we need to convert it to a dictionary
-        # the problem is, json.loads() requires things to be enclosed in double quotes
-        # current_card has all its values enclosed in single quotes
-        # so first we have to run this
+        # json.loads() requires things to be enclosed in double quotes
         current_card = current_card.replace("'", '"')
-        # then load it into a dictionary
         current_card = json.loads(current_card)
 
         if not card_check(deck_id, current_card):
             session['error'] = "You cannot play that card"
+        else:
+            increment_counter(deck_id)
 
     return redirect(f"/connect-{deck_id}")
     #return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=card_in_play, deck_id=deck_id) #redirect('/connect-<deck_id>', code=307)

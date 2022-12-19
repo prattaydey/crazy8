@@ -8,7 +8,8 @@ def restore():
     deck_id = create_deck()
     setup(deck_id)
 
-    data = {deck_id : {"room_name" : "The Room of Requirements", "player1" : "not_a_real_player"}}
+    requests.get(f"https://api.countapi.xyz/hit/{deck_id}")
+    data = {deck_id : {"room_name" : "The Room of Requirements", "counter" : f"https://api.countapi.xyz/get/{deck_id}"}}
     data = json.dumps(data)
     url = f"https://jsonblob.com/api/room/{blobId}"
     requests.put(url, data=data)
