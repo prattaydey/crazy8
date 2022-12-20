@@ -1,0 +1,61 @@
+<!-- Adorable Macho Elephants: Prattay, Joseph, Kevin, Anjini
+SoftDev
+Period 07
+Dec 2022 -->
+
+<html>
+    <head>
+      <title> Let's play! </title>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation.min.css" crossorigin="anonymous">
+      <link rel="stylesheet" href="/static/css/game.css">
+    </head>
+
+    <body>
+      <form action="/leave" method="POST">
+        <button class="button"> 
+            Return to main page 
+        </button>
+        <input type="hidden" value="{{deck_id}}" name="deck_id">
+      </form>
+      <!-- player2's hand (top)  -->
+      <div class="grid-container">
+        <div class="grid-x grid-padding-x align-center">
+          {% for card in player2_hand %}
+            <img src="/static/playing_card.png" style="width: 10%;">
+          {% endfor %}
+        </div>
+      </div>
+
+      <br>
+
+      <div class="grid-container">
+        <div class="grid-x">
+          <!-- deck cards are drawn from -->
+            <div class="cell" style="width: 10%;">
+              <img src="/static/playing_card.png">
+            </div>
+            <!-- card in play -->
+            <div class="cell" style="width: 20%; margin-left: 30%; margin-right: 40%;">
+                <img src="{{card_in_play['image']}}" name ="card_in_play" style="padding-left: 25%; padding-right: 25%;">
+                <div style="position: relative; text-align: center; top: 5%; color: brown;">
+                    {{error_message}}
+                </div>>
+            </div>
+        </div>
+      </div>
+    
+      <!-- player1's hand (bottom)  -->
+      <div class="grid-container">
+        <div class="grid-x grid-margin-x align-center">
+          {% for card in player1_hand %}
+            <img src="/static/playing_card.png" style="width: 10%;">
+          {% endfor %}
+        </div>
+      </div>
+
+      <br>
+
+
+
+    </body>
+</html>
