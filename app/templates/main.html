@@ -55,8 +55,8 @@ Dec 2022 -->
             <img src="https://placekitten.com/400/300">
             <div class="card-section">
               <p>
-                Games Won:      <br>
-                Games Lost:     <br>
+                Games Won:   {{games_won}}    <br>
+                Games Lost:  {{games_lost}}   <br>
               </p>
             </div>
           </div>
@@ -96,7 +96,9 @@ Dec 2022 -->
     </div>
 
     <div class="text-center">
-      <a class="button large" href="{{url_for('waiting')}}" class="button">Play Game</a>
+      <form action="/waiting" method="POST">
+        <button class="button large" class="button">Play Game</button>
+      </form>
     </div>
 
     <form method="POST">

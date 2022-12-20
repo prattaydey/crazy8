@@ -20,8 +20,8 @@ DB_FILE="tables.db"
 db = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
 c = db.cursor()               #facilitate db ops -- you will use cursor to trigger db events
 
-c.execute("create table if not exists accounts(id INT username TEXT, password TEXT);")
-c.execute("create table if not exists stats(id INT, won INT, lost INT);")
+c.execute("create table if not exists accounts(username TEXT, password TEXT);")
+c.execute("create table if not exists stats(username TEXT, won INT, lost INT);")
 db.commit()
 
 
@@ -80,6 +80,7 @@ def register():
         # if there isn't an account associated with said username then create one
         if not c.fetchone():
             c.execute("insert into accounts values(?, ?)", (input_username, input_password))
+            c.execute("insert into stats values(?, 0, 0)", (input_username,))
             return render_template('login.html')
         # if username is already taken
         else:
@@ -148,7 +149,7 @@ def logout():
 # renders the cool loading page 
 @app.route("/loadings", methods=['GET', 'POST'])
 def loadings():
-    return render_template('loading.html')
+    return render_template('waiting.html')
 
 # the main page where we can make custom rooms and stuff!
 @app.route("/main", methods=['GET', 'POST'])
@@ -158,18 +159,25 @@ def main():
         room_name = request.form['room_name']
         deck_id = create_deck()
         setup(deck_id)
-        upload_deck_id(deck_id, room_name)
+        create_room(deck_id, room_name)
         print("created room " + room_name + " with id " + deck_id + " and a counter at " + f"https://api.countapi.xyz/get/{deck_id}")
 
     if 'username' in session:
         # returns a dictionary
         rooms = get_rooms()
-        # tell the variable that it is a dictionary
-        rooms = dict(rooms)
         # returns a list of deck ids
         ids = rooms.keys()
+        for id in ids:
+            print(is_game_finished(id))
+            if is_game_finished(id) and (not 'player1' in rooms[id]) and (not 'player2' in rooms[id]):
+                remove_room(id)
+        rooms = get_rooms()
+        ids = rooms.keys()
 
-        return render_template('main.html', room_names=rooms, ids=ids)
+        games_won = c.execute("SELECT won FROM stats WHERE username=?", (session['username'],)).fetchone()[0]
+        games_lost = c.execute("SELECT lost FROM stats WHERE username=?", (session['username'],)).fetchone()[0]
+
+        return render_template('main.html', room_names=rooms, ids=ids, games_won=games_won, games_lost=games_lost)
     else:
         print("user is not logged in. Redirecting to /login")
         return redirect("/login")
@@ -192,10 +200,19 @@ def connect(deck_id):
         print("user is not logged in. Redirecting to /login")
         return redirect('/login')
 
-    room = get_rooms()[deck_id]
+    rooms = get_rooms()
+    if deck_id in rooms:
+        room = rooms[deck_id]
+    else: 
+        return "this game no longer exists :("
 
     # if the player trying to join the room has already entered the room previously, then let them in, but don't add their name again
     usernames = room.values()
+
+    cards_in_play = get_pile(deck_id, "play")
+    current_card = cards_in_play[len(cards_in_play) - 1]
+    cards_remaining = remaining_in_deck(deck_id)
+
     if session['username'] in usernames:
         if 'player1' in room and room['player1'] == session['username']:
             my_hand = get_pile(deck_id, "player1")
@@ -214,12 +231,12 @@ def connect(deck_id):
             my_hand = get_pile(deck_id, "player2")
             opponents_hand = get_pile(deck_id, "player1")
         else:
-            return "this room is full :(" 
+            player1_hand = get_pile(deck_id, "player1")
+            player2_hand = get_pile(deck_id, "player2")
+            return render_template("spectate.html", player1_hand=player1_hand, player2_hand=player2_hand, card_in_play=current_card, deck_id=deck_id, cards_remaining=cards_remaining, error_message='You are spectating')
 
-    cards_in_play = get_pile(deck_id, "play")
-    current_card = cards_in_play[len(cards_in_play) - 1]
-
-    cards_remaining = remaining_in_deck(deck_id)
+    if cards_remaining == 0:
+        reshuffle_deck(deck_id)
 
     if 'error' in session:
         error_message = session['error']
@@ -227,22 +244,34 @@ def connect(deck_id):
     else:
         error_message = ""
 
-    msg = ""
+    if not is_game_finished(deck_id):
+        #winning and losing
+        if len(my_hand) == 0:
+            c.execute("UPDATE stats SET won = won + 1 WHERE username=?", (session['username'], ))
+            error_message = "Congrats, you win!"
 
-    # count api for win/lose
-    #winning and losing
-    if len(my_hand) == 0:
-        c.execute("UPDATE stats SET won = +1 WHERE id=?", session['id'])
-        c.execute("UPDATE stats SET lost = +1 WHERE id=?", session['id'] )
-        msg = "Congrats, you win!"
-    elif len(opponents_hand) == 0:
-        c.execute("UPDATE stats SET won = +1 WHERE id=?", session['id'])
-        c.execute("UPDATE stats SET lost = +1 WHERE id=?", session['id'])
-        msg = "Aw shucks, you loose"
-    elif cards_remaining == 0:
-        reshuffle_deck(deck_id)
+            games = get_rooms()
+            this_game = dict(games[deck_id])
+            this_game.update({"game_finished" : "True"})
+            games[deck_id] = this_game
+            games = json.dumps(games)
+                
+            url = f"https://jsonblob.com/api/room/{blobId}"
+            requests.put(url, data=games)
+        elif len(opponents_hand) == 0:
+            c.execute("UPDATE stats SET lost = lost + 1 WHERE username=?", (session['username'], ))
+            error_message = "Aw shucks, you loose"
+                
+            games = get_rooms()
+            this_game = dict(games[deck_id])
+            this_game.update({"game_finished" : "True"})
+            games[deck_id] = this_game
+            games = json.dumps(games)
+                
+            url = f"https://jsonblob.com/api/room/{blobId}"
+            requests.put(url, data=games)
 
-    return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=current_card, deck_id=deck_id, cards_remaining=cards_remaining, error_message=error_message, msg=msg)
+    return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=current_card, deck_id=deck_id, cards_remaining=cards_remaining, error_message=error_message)
 
 # draws from deck, uses up a turn    
 @app.route("/draw-<deck_id>", methods=["GET"])
@@ -303,7 +332,7 @@ def play(deck_id):
 
 
 #To be used after Player presses play button and there are no available rooms
-@app.route("/waiting", methods=['POST'])
+@app.route("/waiting", methods=['GET','POST'])
 def waiting():
     room_list = get_rooms()
     for id in room_list:
@@ -315,7 +344,7 @@ def waiting():
             return redirect(f"/connect-{deck_id}")
 
     # get sent to the waiting room
-    return render_template("loading.html")
+    return render_template("waiting.html")
 
 
 # page with the game

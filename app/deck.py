@@ -27,7 +27,6 @@ def reshuffle_deck(deck_id):
     return_pile = requests.get(f"https://www.deckofcardsapi.com/api/deck/{deck_id}/pile/play/return/")
     add_to_pile("play", deck_id, card_in_play)
     shuffle_deck()
-    
 
 def draw_from_pile(deck_id, pile_name):
     return requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/pile/{pile_name}/draw").json()['cards'][0]
@@ -52,7 +51,7 @@ def get_pile(deck_id, pile_name):
     pile = requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/pile/{pile_name}/list").json()['piles'][pile_name]['cards']
     return pile
 
-def upload_deck_id(deck_id, room_name):
+def create_room(deck_id, room_name):
     # get a dictionary of existing rooms and their ids
     url = f"https://jsonblob.com/api/room/{blobId}"
     existing_ids = requests.get(url).content
@@ -65,9 +64,19 @@ def upload_deck_id(deck_id, room_name):
     requests.get(f"https://api.countapi.xyz/hit/{deck_id}")
 
     # update existing data
-    existing_ids.update({deck_id : {"room_name" : room_name, "counter" : f"https://api.countapi.xyz/{deck_id}"}})
+    existing_ids.update({deck_id : {"room_name" : room_name, "counter" : f"https://api.countapi.xyz/{deck_id}", "game_finished" : "False"}})
     data = json.dumps(existing_ids)
 
+    requests.put(url, data=data)
+    return url
+
+def remove_room(deck_id):
+    url = f"https://jsonblob.com/api/room/{blobId}"
+    existing_ids = requests.get(url).content
+    existing_ids = json.loads(existing_ids)
+    existing_ids = dict(existing_ids)
+    existing_ids.pop(deck_id)
+    data = json.dumps(existing_ids)
     requests.put(url, data=data)
     return url
 
@@ -93,6 +102,9 @@ def which_player(deck_id, session):
             return "player1"
         elif 'player2' in room and room['player2'] == session['username']:
             return "player2"
+
+def is_game_finished(deck_id):
+    return (get_rooms()[deck_id]['game_finished']) == "True"
 
 # helper function -- draws card from the hand that has it, adds to pile in play
 def play_card(deck_id, card_code):
@@ -125,7 +137,7 @@ def add_player(deck_id, username):
     elif not 'player2' in room_dict:
         room_dict.update({"player2" : username})
     else:
-        return False
+        room_dict.update({"spectator" : username})
 
     # replace the current definition for deck_id with the modified one
     rooms[deck_id] = room_dict

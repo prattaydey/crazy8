@@ -9,7 +9,7 @@ def restore():
     setup(deck_id)
 
     requests.get(f"https://api.countapi.xyz/hit/{deck_id}")
-    data = {deck_id : {"room_name" : "The Room of Requirements", "counter" : f"https://api.countapi.xyz/get/{deck_id}"}}
+    data = {deck_id : {"room_name" : "The Room of Requirements", "counter" : f"https://api.countapi.xyz/get/{deck_id}", "game_finished" : "False"}}
     data = json.dumps(data)
     url = f"https://jsonblob.com/api/room/{blobId}"
     requests.put(url, data=data)
@@ -27,7 +27,7 @@ def restore():
     requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/pile/play/add/?cards={starting_card}")
 
     url = f"https://jsonblob.com/api/room/{blobId}"
-    upload_deck_id(deck_id, "Insta win")
+    create_room(deck_id, "Insta win")
 
     print(url)
 

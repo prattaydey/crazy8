@@ -132,6 +132,7 @@ kevinL -- 2022-12-15 21:31
 
 josephW -- 2022-12-16 21:53
 - added a function and passed value to crazy8.html to view remaining cards in the deck
+- attempting to make a waiting room
 
 prattayD -- 2022-12-16 21:58
 - re-evaluated old functions to serve new uses
@@ -160,7 +161,7 @@ anjiniK -- 2022-12-18 19:54
 - cleaned up the main page 
 
 josephW -- 2022-12-19 13:19
-- attempting to make thw waiting room automatically add you to a room when it becomes avalible
+- attempting to make the waiting room automatically add you to a room when it becomes avalible
 
 anjiniK -- 2022-12-19 13:19
 - continued working on db studd for updating wins and losses 
@@ -168,4 +169,17 @@ anjiniK -- 2022-12-19 13:19
 kevinL -- 2022-12-19 13:21
 - moved counter cretion from /main into a function in deck.py 
 - updated restore.py to include a room for testing win screen
+
+prattayD -- 2022-12-19 22:00
+- created spectate option, needs more work to be fully functional
+
+kevinL -- 2022-12-19 22:04
+- added additional data to rooms that lets us track whether a game is finished or not
+- made rooms automatically delete upon finishiing a game
+
+anjiniK -- 2022-12-19 22:04
+- changed stats database to remove ids and added code to update a player's number of wins and losses
+
+josephW -- 2022-12-19 22:04
+- Very Very close to getting waitng room to work, I think
 ==============================================================
