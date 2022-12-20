@@ -182,4 +182,5 @@ anjiniK -- 2022-12-19 22:04
 
 josephW -- 2022-12-19 22:04
 - Very Very close to getting waitng room to work, I think
+- made the play game button route you to an avalible game. Else it'll put you in waiting room
 ==============================================================
