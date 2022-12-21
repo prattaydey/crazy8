@@ -1,8 +1,13 @@
 body {
     background-image: linear-gradient(45deg, transparent 20%, black 25%, transparent 25%),
+    /* lines */
     linear-gradient(-45deg, transparent 20%, black 25%, transparent 25%),
+    /* lines */
     linear-gradient(-45deg, transparent 75%, black 80%, transparent 0),
-    radial-gradient(gray 2px, transparent 0);
-    background-size: 30px 30px, 30px 30px;
+    /* dots */
+    radial-gradient(gray 3px, transparent 0);
+
+    /* Control the size of the background elements */
+    background-size: 45px 45px, 45px 45px;
     background-color: #343a40;
     }

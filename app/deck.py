@@ -7,6 +7,7 @@ import requests
 import json
 
 blobId = 1051631725620510720
+# https://jsonblob.com/api/room/1051631725620510720
 
 def create_deck():
     request = requests.get("https://deckofcardsapi.com/api/deck/new/")
@@ -22,11 +23,15 @@ def draw_from_deck(deck_id):
 
 def reshuffle_deck(deck_id):
     play_pile = get_pile(deck_id, "play")
-    card_in_play = play_pile[len(card_in_play) - 1]['code']
+    cards_to_return = ""
+    for i in range(len(play_pile) - 1):
+        cards_to_return += play_pile[i]['code'] + ","
+    print("returning the following cards " + cards_to_return)
+    # card_in_play = play_pile[len(play_pile) - 1]['code']
 
-    return_pile = requests.get(f"https://www.deckofcardsapi.com/api/deck/{deck_id}/pile/play/return/")
-    add_to_pile("play", deck_id, card_in_play)
-    shuffle_deck()
+    requests.get(f"https://www.deckofcardsapi.com/api/deck/{deck_id}/return/?cards={cards_to_return}")
+    # add_to_pile("play", deck_id, card_in_play)
+    shuffle_deck(deck_id)
 
 def draw_from_pile(deck_id, pile_name):
     return requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/pile/{pile_name}/draw").json()['cards'][0]
@@ -64,7 +69,7 @@ def create_room(deck_id, room_name):
     requests.get(f"https://api.countapi.xyz/hit/{deck_id}")
 
     # update existing data
-    existing_ids.update({deck_id : {"room_name" : room_name, "counter" : f"https://api.countapi.xyz/{deck_id}", "game_finished" : "False"}})
+    existing_ids.update({deck_id : {"room_name" : room_name, "counter" : f"https://api.countapi.xyz/{deck_id}", "game_finished" : "False", "player1_finished" : "False", "player2_finished" : "False"}})
     data = json.dumps(existing_ids)
 
     requests.put(url, data=data)
@@ -106,6 +111,12 @@ def which_player(deck_id, session):
 def is_game_finished(deck_id):
     return (get_rooms()[deck_id]['game_finished']) == "True"
 
+def player1_finished(deck_id):
+    return (get_rooms()[deck_id]['player1_finished']) == "True"
+
+def player2_finished(deck_id):
+    return (get_rooms()[deck_id]['player2_finished']) == "True"
+
 # helper function -- draws card from the hand that has it, adds to pile in play
 def play_card(deck_id, card_code):
     return requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/pile/play/add/?cards={card_code}")
@@ -144,7 +155,7 @@ def add_player(deck_id, username):
 
     # upload the data
     rooms = json.dumps(rooms)
-    print(rooms)
+    # print(rooms)
     url = f"https://jsonblob.com/api/room/{blobId}"
     requests.put(url, data=rooms)
 

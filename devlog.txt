@@ -183,4 +183,21 @@ anjiniK -- 2022-12-19 22:04
 josephW -- 2022-12-19 22:04
 - Very Very close to getting waitng room to work, I think
 - made the play game button route you to an avalible game. Else it'll put you in waiting room
+
+kevinL -- 2022-12-20 
+- added a way to prevent people from reentering finished games to get more wins / losses
+
+anjiniK -- 2022-12-20 21:48
+- added reload button
+- tried very hard and unsucessfully to make the page reload on it's own
+- indoctrinated my sister to watch our practice demo 
+
+prattayD -- 2022-12-20 21:48
+- fixed spectate mode 
+- attempt at starting special cards feature (unsuccessfully so far)
+
+josephW -- 2022-12-20 21:48
+- attempted to get waiting room to work; failed. Have to manually reload page
+- reajusted some css, background pattern resized
+
 ==============================================================

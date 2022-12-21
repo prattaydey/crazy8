@@ -4,66 +4,74 @@ Period 07
 Dec 2022 -->
 
 <html>
-    <head>
-      <title> Let's play! </title>
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation.min.css" crossorigin="anonymous">
-      <link rel="stylesheet" href="/static/css/game.css">
-    </head>
+  <head>
+    <title> Let's play! </title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/css/game.css">
+  </head>
 
-    <body>
-      <form action="/leave" method="POST">
-        <button class="button"> 
-            Return to main page 
-        </button>
-        <input type="hidden" value="{{deck_id}}" name="deck_id">
-      </form>
-      <!-- opponents's hand  -->
-      <div class="grid-container">
-        <div class="grid-x grid-padding-x align-center">
-          {% for card in opponents_hand %}
-            <img src="/static/playing_card.png" style="width: 10%;">
-          {% endfor %}
-        </div>
+  <body>
+    <form action="/leave" method="POST">
+      <button class="button"> 
+          Return to main page 
+      </button>
+      <input type="hidden" value="{{deck_id}}" name="deck_id">
+    </form>
+
+    <!-- opponents's hand  -->
+    <div class="grid-container">
+      <div class="grid-x grid-padding-x align-center">
+        {% for card in opponents_hand %}
+          <img src="/static/playing_card.png" style="width: 10%;">
+        {% endfor %}
       </div>
+    </div>
 
-      <br>
+    <br>
 
-      <div class="grid-container">
-        <div class="grid-x">
-          <!-- deck cards are drawn from -->
-            <div class="cell" style="width: 10%;">
-              <a class="thumbnail" href="/draw-{{deck_id}}" style="margin: 0;">
-                <img src="/static/playing_card.png">
-              </a>
-            </div>
-            <!-- card in play -->
-            <div class="cell" style="width: 20%; margin-left: 30%; margin-right: 40%;">
-                <img src="{{card_in_play['image']}}" name ="card_in_play" style="padding-left: 25%; padding-right: 25%;">
-                <div style="position: relative; text-align: center; top: 5%; color: brown;">
-                    {{error_message}}
-                </div>>
-            </div>
+    <div class="grid-container">
+      <div class="grid-x">
+        <!-- deck cards are drawn from -->
+        <div class="cell" style="width: 10%;">
+          <a class="thumbnail" href="/draw-{{deck_id}}" style="margin: 0;">
+            <img src="/static/playing_card.png">
+          </a>
         </div>
-      </div>
-
-      <!-- player's cards -->
-      <div class="grid-container">
-        <div class="grid-x grid-margin-x align-center">
-          {% for card in my_hand %}
-          <div class="card" style="width: 120px; background: rgba(186, 186, 186, 0);">
-            <div class="card-divider" style="background: rgba(186, 186, 186, 0); margin-right: 0%;">
-              <form action="/{{deck_id}}/play" method="POST"> 
-                <button class="clear secondary button small center" style="margin-bottom: 0px;"> 
-                  Select
-                </button> 
-                <input type="hidden" id="value_of_card" name="current_card" value="{{card}}">
-              </form>  
-            </div>   
-            <img src="{{card['image']}}" style="width: 120px;">
+        <!-- card in play -->
+        <div class="cell" style="width: 40%; margin-left: 20%; margin-right: 30%;">
+          <img src="{{card_in_play['image']}}" name ="card_in_play" style="padding-left: 37.5%; padding-right: 37.5%;">
+          <div style="position: relative; text-align: center; top: 5%; color: white; font-size: 25px">
+            {{msg}}
           </div>
-          {% endfor %}
         </div>
+        <!-- reload button -->
+          <div class="cell" style="width: 10%; margin-left: 80%; margin-right: 70%; top: 5%;">
+            <form action="/connect-{{deck_id}}" method="POST"> 
+              <button class="secondary button center" style="margin-bottom: 0px;"> 
+                Play Turn
+              </button> 
+            </form>          
+          </div>
       </div>
+    </div>
 
-
+    <!-- player's cards -->
+    <div class="grid-container">
+      <div class="grid-x grid-margin-x align-center">
+        {% for card in my_hand %}
+        <div class="card" style="width: 120px; background: rgba(186, 186, 186, 0);">
+          <div class="card-divider" style="background: rgba(186, 186, 186, 0); margin-right: 0%;">
+            <form action="/{{deck_id}}/play" method="POST"> 
+              <button class="clear secondary button small center" style="margin-bottom: 0px;"> 
+                Select
+              </button> 
+              <input type="hidden" id="value_of_card" name="current_card" value="{{card}}">
+            </form>  
+          </div>   
+          <img src="{{card['image']}}" style="width: 120px;">
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </body>
 </html>

@@ -20,12 +20,6 @@
 
   <body onload="redirect()"> 
 
-    <form id="myForm" action="/connect-{{id}}" method="POST">
-        <button class="button">
-          Join
-        </button>
-    </form>
-
     <script>
 
       async function getData() {
@@ -36,27 +30,26 @@
 
 
       async function getDataFromAPI() {
-
-        const form = document.getElementById('myForm');
-
-        setInterval(() => {
-          const data = getData();
+        setInterval(async () => {
+          const data = await getData();
           // The data variable contains the dictionary you want to iterate through
           const keys = Object.keys(data);
           for (let i = 0; i < keys.length; i++) {
             const Deck_id = keys[i];
             const room = data[Deck_id];
 
-            if (!('Player1' in room) || !('Player2' in room)){
-
-              const form = document.getElementById('myForm');
-
-              // Replace the placeholder value with a new value
-              form.action = form.action.replace('{{id}}', Deck_id);
-
-              // Submit the form
-              form.submit();
+            if (!('player1' in room) || !('player2' in room)){
+              // Get the current URL
+              let currentUrl = window.location.href;
               
+              // add the last section of the URL
+              const newURL = f`http://127.0.0.1:5000/connect-${Deck_id}`;
+
+              //redirect
+              window.location.href = newURL;
+
+              // Stop the interval
+              clearInterval(interval);
             }
           }
         }, 1000);

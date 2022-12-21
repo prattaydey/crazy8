@@ -81,6 +81,7 @@ def register():
         if not c.fetchone():
             c.execute("insert into accounts values(?, ?)", (input_username, input_password))
             c.execute("insert into stats values(?, 0, 0)", (input_username,))
+            db.commit()
             return render_template('login.html')
         # if username is already taken
         else:
@@ -154,33 +155,32 @@ def loadings():
 # the main page where we can make custom rooms and stuff!
 @app.route("/main", methods=['GET', 'POST'])
 def main():
+    if not 'username' in session:
+        print("user is not logged in. Redirecting to /login")
+        return redirect('/login')
+
+    # if the user submitted a form to create a room
     if request.method == "POST" and 'room_name' in request.form:
-        #create a room
         room_name = request.form['room_name']
         deck_id = create_deck()
         setup(deck_id)
         create_room(deck_id, room_name)
         print("created room " + room_name + " with id " + deck_id + " and a counter at " + f"https://api.countapi.xyz/get/{deck_id}")
 
-    if 'username' in session:
-        # returns a dictionary
-        rooms = get_rooms()
-        # returns a list of deck ids
-        ids = rooms.keys()
-        for id in ids:
-            print(is_game_finished(id))
-            if is_game_finished(id) and (not 'player1' in rooms[id]) and (not 'player2' in rooms[id]):
-                remove_room(id)
-        rooms = get_rooms()
-        ids = rooms.keys()
+    # display a list of all existing room
+    rooms = get_rooms()
+    ids = rooms.keys()
+    for id in ids:
+        # remove games that have no players in them and are finished
+        if is_game_finished(id) and (not 'player1' in rooms[id]) and (not 'player2' in rooms[id]):
+            remove_room(id)
+    rooms = get_rooms()
+    ids = rooms.keys()
 
-        games_won = c.execute("SELECT won FROM stats WHERE username=?", (session['username'],)).fetchone()[0]
-        games_lost = c.execute("SELECT lost FROM stats WHERE username=?", (session['username'],)).fetchone()[0]
+    games_won = c.execute("SELECT won FROM stats WHERE username=?", (session['username'],)).fetchone()[0]
+    games_lost = c.execute("SELECT lost FROM stats WHERE username=?", (session['username'],)).fetchone()[0]
 
-        return render_template('main.html', room_names=rooms, ids=ids, games_won=games_won, games_lost=games_lost)
-    else:
-        print("user is not logged in. Redirecting to /login")
-        return redirect("/login")
+    return render_template('main.html', room_names=rooms, ids=ids, games_won=games_won, games_lost=games_lost)
         
 #how to remove a player from the room
 @app.route("/leave", methods=["POST"])
@@ -189,7 +189,11 @@ def leave():
         print("user is not logged in. Redirecting to /login")
         return redirect("/login")
     print("removing player from room")
-    remove_player(request.form['deck_id'], session['username'])
+    try:
+        remove_player(request.form['deck_id'], session['username'])
+    except:
+        pass
+        print("this room no longer exists")
     print("Redirecting to /main")
     return redirect("/main")
         
@@ -206,78 +210,93 @@ def connect(deck_id):
     else: 
         return "this game no longer exists :("
 
-    # if the player trying to join the room has already entered the room previously, then let them in, but don't add their name again
-    usernames = room.values()
-
-    cards_in_play = get_pile(deck_id, "play")
-    current_card = cards_in_play[len(cards_in_play) - 1]
+    # if the deck is empty
     cards_remaining = remaining_in_deck(deck_id)
-
-    if session['username'] in usernames:
-        if 'player1' in room and room['player1'] == session['username']:
-            my_hand = get_pile(deck_id, "player1")
-            opponents_hand = get_pile(deck_id, "player2")
-        elif 'player2' in room and room['player2'] == session['username']:
-            my_hand = get_pile(deck_id, "player2")
-            opponents_hand = get_pile(deck_id, "player1")
-
-    # for players entering the room for the first time
-    else:
-        add_player(deck_id, session['username'])
-        if not 'player1' in room:
-            my_hand = get_pile(deck_id, "player1")
-            opponents_hand = get_pile(deck_id, "player2")
-        elif not 'player2' in room:
-            my_hand = get_pile(deck_id, "player2")
-            opponents_hand = get_pile(deck_id, "player1")
-        else:
-            player1_hand = get_pile(deck_id, "player1")
-            player2_hand = get_pile(deck_id, "player2")
-            return render_template("spectate.html", player1_hand=player1_hand, player2_hand=player2_hand, card_in_play=current_card, deck_id=deck_id, cards_remaining=cards_remaining, error_message='You are spectating')
-
-    if cards_remaining == 0:
+    print("cards remaining: " + str(cards_remaining))
+    cards_in_play = get_pile(deck_id, "play")
+    print("cards in play pile: " + str(len(cards_in_play)))
+    if cards_remaining == 0 and len(cards_in_play) > 1:
         reshuffle_deck(deck_id)
 
+    current_card = cards_in_play[len(cards_in_play) - 1]
+
+    # if you are player 1 in that room and are loading this page
+    if 'player1' in room and room['player1'] == session['username']:
+        my_hand = get_pile(deck_id, "player1")
+        opponents_hand = get_pile(deck_id, "player2")
+    # if you are player 2 in that room and are loading this page
+    elif 'player2' in room and room['player2'] == session['username']:
+        my_hand = get_pile(deck_id, "player2")
+        opponents_hand = get_pile(deck_id, "player1")
+    # if there is no player 1 in the room
+    elif not 'player1' in room:
+        print(session['username'] + " is now player 1")
+        my_hand = get_pile(deck_id, "player1")
+        opponents_hand = get_pile(deck_id, "player2")
+        add_player(deck_id, session['username'])
+    # if there is no player 2 in the room
+    elif not 'player2' in room:
+        print(session['username'] + " is now player 2")
+        my_hand = get_pile(deck_id, "player2")
+        opponents_hand = get_pile(deck_id, "player1")
+        add_player(deck_id, session['username'])
+    # if the room is full
+    else:
+        print("room is full. " + session['username'] + "user is now spectating")
+        player1_hand = get_pile(deck_id, "player1")
+        player2_hand = get_pile(deck_id, "player2")
+        return render_template("spectate.html", player1_hand=player1_hand, player2_hand=player2_hand, card_in_play=current_card, deck_id=deck_id, cards_remaining=cards_remaining, error_message='You are spectating')
+
     if 'error' in session:
-        error_message = session['error']
+        msg = session['error']
         session.pop('error')
     else:
-        error_message = ""
+        msg = ""
 
     if not is_game_finished(deck_id):
         #winning and losing
+        games = get_rooms()
+        this_game = dict(games[deck_id])
+        url = f"https://jsonblob.com/api/room/{blobId}"
+
+        player = which_player(deck_id, session)
+        if player == "player1":
+            credit_claimed = player1_finished(deck_id)
+        elif player == "player2":
+            credit_claimed = player2_finished(deck_id)
+        
         if len(my_hand) == 0:
-            c.execute("UPDATE stats SET won = won + 1 WHERE username=?", (session['username'], ))
-            error_message = "Congrats, you win!"
+            if not credit_claimed:
+                c.execute("UPDATE stats SET won = won + 1 WHERE username=?", (session['username'], ))
+                db.commit()
+                this_game.update({f"{player}_finished" : "True"})
+            msg = "Congrats, you win!"
 
-            games = get_rooms()
-            this_game = dict(games[deck_id])
-            this_game.update({"game_finished" : "True"})
-            games[deck_id] = this_game
-            games = json.dumps(games)
-                
-            url = f"https://jsonblob.com/api/room/{blobId}"
-            requests.put(url, data=games)
         elif len(opponents_hand) == 0:
-            c.execute("UPDATE stats SET lost = lost + 1 WHERE username=?", (session['username'], ))
-            error_message = "Aw shucks, you loose"
+            if not credit_claimed:
+                c.execute("UPDATE stats SET lost = lost + 1 WHERE username=?", (session['username'], ))
+                db.commit()
+                this_game.update({f"{player}_finished" : "True"})
+            msg = "Aw shucks, you loose"
                 
-            games = get_rooms()
-            this_game = dict(games[deck_id])
-            this_game.update({"game_finished" : "True"})
-            games[deck_id] = this_game
-            games = json.dumps(games)
-                
-            url = f"https://jsonblob.com/api/room/{blobId}"
-            requests.put(url, data=games)
+        # print(player1_finished(deck_id))
+        # print(player2_finished(deck_id))
 
-    return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=current_card, deck_id=deck_id, cards_remaining=cards_remaining, error_message=error_message)
+        if player1_finished(deck_id) and player2_finished(deck_id):
+            this_game.update({"game_finished" : "True"})
+
+        games[deck_id] = this_game
+        games = json.dumps(games)
+        requests.put(url, data=games)
+    
+    return render_template("crazy8.html", my_hand=my_hand, opponents_hand=opponents_hand, card_in_play=current_card, deck_id=deck_id, cards_remaining=cards_remaining, msg=msg)
 
 # draws from deck, uses up a turn    
 @app.route("/draw-<deck_id>", methods=["GET"])
 def draw(deck_id):
-    if 'username' not in session:
-        return redirect("/login")
+    if not 'username' in session:
+        print("user is not logged in. Redirecting to /login")
+        return redirect('/login')
 
     if which_player(deck_id, session) == "player1":
         # player 1 goes on odd values
@@ -291,9 +310,12 @@ def draw(deck_id):
             return redirect(f"/connect-{deck_id}")
 
     me = which_player(deck_id, session)
-    card_drawn = draw_from_deck(deck_id)['code']
-    add_to_pile(me, deck_id, card_drawn)
-    increment_counter(deck_id)
+    if remaining_in_deck(deck_id) > 0:
+        card_drawn = draw_from_deck(deck_id)['code']
+        add_to_pile(me, deck_id, card_drawn)
+        increment_counter(deck_id)
+    else: 
+        session['error'] = "There are no cards that can be drawn"
     return redirect(f"/connect-{deck_id}")
 
 #playing the game
@@ -303,6 +325,10 @@ def draw(deck_id):
 #goal: player will join random room with empty spot. If none available, go to waiting list
 @app.route("/<deck_id>/play", methods=['POST'])
 def play(deck_id):
+    if not 'username' in session:
+        print("user is not logged in. Redirecting to /login")
+        return redirect('/login')
+
     if request.method == "POST":
         if which_player(deck_id, session) == "player1":
             # player 1 goes on odd values
@@ -334,6 +360,10 @@ def play(deck_id):
 #To be used after Player presses play button and there are no available rooms
 @app.route("/waiting", methods=['GET','POST'])
 def waiting():
+    if not 'username' in session:
+        print("user is not logged in. Redirecting to /login")
+        return redirect('/login')
+
     room_list = get_rooms()
     for id in room_list:
         deck_id = id #deck_id now equal to the deck id of one of the rooms
@@ -344,7 +374,7 @@ def waiting():
             return redirect(f"/connect-{deck_id}")
 
     # get sent to the waiting room
-    return render_template("waiting.html")
+    return render_template("loading.html")
 
 
 # page with the game
