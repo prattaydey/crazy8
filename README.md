@@ -1,4 +1,4 @@
-# p1_AdorableMachoElephants
+# Crazy 8
 ## to-do:
 IMPORTANT:
 - auto-reload whenever a user performs an action
